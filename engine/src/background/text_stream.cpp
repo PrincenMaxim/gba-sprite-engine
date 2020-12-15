@@ -109,6 +109,6 @@ void TextStream::setFontColor(COLOR color) {
 
 void TextStream::persist() {
     Background::persist();
-    // WARNING: stream hijacks last bg palette bank, last index, no matter what.
+    // WARNING: stream hijacks last bg_statics palette bank, last index, no matter what.
     setFontColor(PaletteManager::color(31, 31, 31));
 }

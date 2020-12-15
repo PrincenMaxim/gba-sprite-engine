@@ -35,7 +35,7 @@ void SplashScreen::load() {
     engine.get()->disableText();
     backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(splashimagePal, sizeof(splashimagePal)));
 
-    // use background number 0, as the text bg is disabled, to start dumping into VRAM from 0x6000000
+    // use background number 0, as the text bg_statics is disabled, to start dumping into VRAM from 0x6000000
     // data exported from grit using: "grit splashimage.png -gt -gB8 -mRtpf -mLs -ftc", see https://www.coranac.com/man/grit/html/grit.htm or https://github.com/devkitPro/grit/blob/master/grit-readme.txt
     // do NOT use "-Mw" or "-Mh", regular map needed, no metamap.
 
@@ -45,5 +45,5 @@ void SplashScreen::load() {
     // the last char block (3) starts at screen block 24, is still available to dump the tilemap in.
     bg.get()->useMapScreenBlock(24);
 
-    engine.get()->enqueueSound(omnom, omnom_bytes, 44200);
+    //engine.get()->enqueueSound(omnom, omnom_bytes, 44200);
 }

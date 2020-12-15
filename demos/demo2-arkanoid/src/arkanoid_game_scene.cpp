@@ -91,7 +91,7 @@ void ArkanoidGameScene::load() {
             .buildPtr();
 
     paddle = builder
-            .withSize(SIZE_32_8)
+            .withSize(SIZE_64_32)
             .withLocation(100, 150)
             .withData(paddleTiles, sizeof(paddleTiles))
             .withinBounds()

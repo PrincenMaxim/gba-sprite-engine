@@ -110,15 +110,15 @@ Scrollable backgrounds are present:
 
 Call `scroll()` in your scene update.
 
-![scroll bg](https://github.com/wgroeneveld/gba-sprite-engine/blob/master/img/scroll.gif?raw=true)
+![scroll bg_statics](https://github.com/wgroeneveld/gba-sprite-engine/blob/master/img/scroll.gif?raw=true)
 
 Sample scrolling background demo 1.
 
 Creating a background: 
 
 ```C
-    bg = std::unique_ptr<Background>(new Background(1, background_data, sizeof(background_data), map, sizeof(map)));
-    bg->useMapScreenBlock(16);
+    bg_statics = std::unique_ptr<Background>(new Background(1, background_data, sizeof(background_data), map, sizeof(map)));
+    bg_statics->useMapScreenBlock(16);
 ```
 
 Backgrounds work a bit different in VRAM compared to sprites. There are only 4 backgrounds available, and background #4 is taken by the font. Parameter 1 identifies your background used for prioritizing. Remember to use a screen block different than your map data. 

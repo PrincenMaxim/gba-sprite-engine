@@ -24,7 +24,7 @@ public:
     std::vector<Sprite *> sprites() override;
     std::vector<Background *> backgrounds() override;
 
-    ArkanoidGameScene(std::shared_ptr<GBAEngine> engine) : Scene(engine), ticks(0), highscore(0) {}
+    ArkanoidGameScene(std::shared_ptr<GBAEngine> engine) : Scene(engine), ticks(0), highscore(0) {} //constructor
 
     void load() override;
     void tick(u16 keys) override;

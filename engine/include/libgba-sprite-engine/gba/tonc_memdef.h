@@ -52,9 +52,9 @@
 */
 /*!	\{	*/
 
-#define DCNT_MODE0				 0	//!< Mode 0; bg 0-4: reg
-#define DCNT_MODE1			0x0001	//!< Mode 1; bg 0-1: reg; bg 2: affine
-#define DCNT_MODE2			0x0002	//!< Mode 2; bg 2-3: affine
+#define DCNT_MODE0				 0	//!< Mode 0; bg_statics 0-4: reg
+#define DCNT_MODE1			0x0001	//!< Mode 1; bg_statics 0-1: reg; bg_statics 2: affine
+#define DCNT_MODE2			0x0002	//!< Mode 2; bg_statics 2-3: affine
 #define DCNT_MODE3			0x0003	//!< Mode 3; bg2: 240x160\@16 bitmap
 #define DCNT_MODE4			0x0004	//!< Mode 4; bg2: 240x160\@8 bitmap
 #define DCNT_MODE5			0x0005	//!< Mode 5; bg2: 160x128\@16 bitmap
@@ -64,10 +64,10 @@
 #define DCNT_OBJ_2D				 0	//!< OBJ-VRAM as matrix
 #define DCNT_OBJ_1D			0x0040	//!< OBJ-VRAM as array
 #define DCNT_BLANK			0x0080	//!< Force screen blank
-#define DCNT_BG0			0x0100	//!< Enable bg 0
-#define DCNT_BG1			0x0200	//!< Enable bg 1
-#define DCNT_BG2			0x0400	//!< Enable bg 2
-#define DCNT_BG3			0x0800	//!< Enable bg 3
+#define DCNT_BG0			0x0100	//!< Enable bg_statics 0
+#define DCNT_BG1			0x0200	//!< Enable bg_statics 1
+#define DCNT_BG2			0x0400	//!< Enable bg_statics 2
+#define DCNT_BG3			0x0800	//!< Enable bg_statics 3
 #define DCNT_OBJ			0x1000	//!< Enable objects
 #define DCNT_WIN0			0x2000	//!< Enable window 0
 #define DCNT_WIN1			0x4000	//!< Enable window 1
@@ -125,21 +125,21 @@
 /*!	\{	*/
 
 #define BG_MOSAIC		0x0040	//!< Enable Mosaic
-#define BG_4BPP				 0	//!< 4bpp (16 color) bg (no effect on affine bg)
-#define BG_8BPP			0x0080	//!< 8bpp (256 color) bg (no effect on affine bg)
+#define BG_4BPP				 0	//!< 4bpp (16 color) bg_statics (no effect on affine bg_statics)
+#define BG_8BPP			0x0080	//!< 8bpp (256 color) bg_statics (no effect on affine bg_statics)
 #define BG_WRAP			0x2000	//!< Wrap around edges of affine bgs
 #define BG_SIZE0			 0
 #define BG_SIZE1		0x4000
 #define BG_SIZE2		0x8000
 #define BG_SIZE3		0xC000
-#define BG_REG_32x32		 0	//!< reg bg, 32x32 (256x256 px)
-#define BG_REG_64x32	0x4000	//!< reg bg, 64x32 (512x256 px)
-#define BG_REG_32x64	0x8000	//!< reg bg, 32x64 (256x512 px)
-#define BG_REG_64x64	0xC000	//!< reg bg, 64x64 (512x512 px)
-#define BG_AFF_16x16		 0	//!< affine bg, 16x16 (128x128 px)
-#define BG_AFF_32x32	0x4000	//!< affine bg, 32x32 (256x256 px)
-#define BG_AFF_64x64	0x8000	//!< affine bg, 64x64 (512x512 px)
-#define BG_AFF_128x128	0xC000	//!< affine bg, 128x128 (1024x1024 px)
+#define BG_REG_32x32		 0	//!< reg bg_statics, 32x32 (256x256 px)
+#define BG_REG_64x32	0x4000	//!< reg bg_statics, 64x32 (512x256 px)
+#define BG_REG_32x64	0x8000	//!< reg bg_statics, 32x64 (256x512 px)
+#define BG_REG_64x64	0xC000	//!< reg bg_statics, 64x64 (512x512 px)
+#define BG_AFF_16x16		 0	//!< affine bg_statics, 16x16 (128x128 px)
+#define BG_AFF_32x32	0x4000	//!< affine bg_statics, 32x32 (256x256 px)
+#define BG_AFF_64x64	0x8000	//!< affine bg_statics, 64x64 (512x512 px)
+#define BG_AFF_128x128	0xC000	//!< affine bg_statics, 128x128 (1024x1024 px)
 
 #define BG_PRIO_MASK	0x0003
 #define BG_PRIO_SHIFT		 0
@@ -178,10 +178,10 @@
 //! \name Window macros
 //\{
 
-#define WIN_BG0			0x0001	//!< Windowed bg 0
-#define WIN_BG1			0x0002	//!< Windowed bg 1
-#define WIN_BG2			0x0004	//!< Windowed bg 2
-#define WIN_BG3			0x0008	//!< Windowed bg 3
+#define WIN_BG0			0x0001	//!< Windowed bg_statics 0
+#define WIN_BG1			0x0002	//!< Windowed bg_statics 1
+#define WIN_BG2			0x0004	//!< Windowed bg_statics 2
+#define WIN_BG3			0x0008	//!< Windowed bg_statics 3
 #define WIN_OBJ			0x0010	//!< Windowed objects
 #define WIN_ALL			0x001F	//!< All layers in window.
 #define WIN_BLD			0x0020	//!< Windowed blending
@@ -240,10 +240,10 @@
 //!\ name Blend control
 //\{
 
-#define BLD_BG0			0x0001	//!< Blend bg 0
-#define BLD_BG1			0x0002	//!< Blend bg 1
-#define BLD_BG2			0x0004	//!< Blend bg 2
-#define BLD_BG3			0x0008	//!< Blend bg 3
+#define BLD_BG0			0x0001	//!< Blend bg_statics 0
+#define BLD_BG1			0x0002	//!< Blend bg_statics 1
+#define BLD_BG2			0x0004	//!< Blend bg_statics 2
+#define BLD_BG3			0x0008	//!< Blend bg_statics 3
 #define BLD_OBJ			0x0010	//!< Blend objects
 #define BLD_ALL			0x001F	//!< All layers (except backdrop)
 #define BLD_BACKDROP	0x0020	//!< Blend backdrop

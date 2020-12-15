@@ -10,7 +10,7 @@
 #include "sample_start_scene.h"
 #include "flying_stuff_scene.h"
 
-#include "lama.h"
+//#include "lama.h" -> heb lama nu bij ff.h gezet
 #include "ff.h"
 #include "sample_sound.h"
 
@@ -45,7 +45,7 @@ void SampleStartScene::load() {
     TextStream::instance().setText("PRESS START", 3, 8);
 
     engine->getTimer()->start();
-    engine->enqueueMusic(zelda_music_16K_mono, zelda_music_16K_mono_bytes);
+    //engine->enqueueMusic(zelda_music_16K_mono, zelda_music_16K_mono_bytes);
 }
 
 void SampleStartScene::tick(u16 keys) {

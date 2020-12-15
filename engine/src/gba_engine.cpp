@@ -66,7 +66,7 @@ void GBAEngine::dequeueAllSounds() {
 void GBAEngine::enqueueSound(const s8 *data, int totalSamples, int sampleRate, SoundChannel channel) {
     SoundControl* control;
 
-    if(channel == ChannelA) {                       // repeating bg music can be restarted
+    if(channel == ChannelA) {                       // repeating bg_statics music can be restarted
         GBAEngine::activeChannelA = SoundControl::channelAControl();
         control = GBAEngine::activeChannelA.get();
     } else {                                        // sound still playing, don't stop that

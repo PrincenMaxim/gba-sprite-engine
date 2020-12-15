@@ -273,7 +273,7 @@ typedef struct AFF_DST_EX
 //! \name IO register types
 //\{
 
-//! Regular bg points; range: :0010 - :001F
+//! Regular bg_statics points; range: :0010 - :001F
 typedef struct POINT16 { s16 x, y; } ALIGN4 POINT16, BG_POINT;
 
 //! Affine parameters for backgrounds; range : 0400:0020 - 0400:003F
