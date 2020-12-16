@@ -7,7 +7,7 @@ add_executable(ourgame.elf
         src/main.cpp
         src/test_scene.cpp
         src/test_scene.h
-        src/fantasyplatformer.h)
+        src/backgrounds/fantasyplatformer.h src/Player.cpp src/Player.h src/sprites/player_idle_sprite.h)
 
 
 target_link_libraries(${PROJECT_NAME}.elf gba-sprite-engine)

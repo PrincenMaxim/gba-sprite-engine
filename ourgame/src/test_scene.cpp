@@ -12,11 +12,17 @@
 #include <libgba-sprite-engine/effects/fade_out_scene.h>
 
 #include "test_scene.h"
-#include "fantasyplatformer.h"
+#include "backgrounds/fantasyplatformer.h"
 #include <iostream>
+#include <memory>
+
+#include "sprites/player_idle_sprite.h"
+#include "Player.h"
+
+
 
 std::vector<Sprite *> TestScene::sprites(){
-    return {};
+    return{player.getSprite()};
 };
 
 std::vector<Background *> TestScene::backgrounds() {
@@ -28,7 +34,13 @@ std::vector<Background *> TestScene::backgrounds() {
     };
 }
 
+void TestScene::move() {
+    player.move(moveUp, moveDown, moveLeft, moveRight);
+}
+
 void TestScene::load(){
+
+    foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(new ForegroundPaletteManager(SharedPal, sizeof(SharedPal)));
     backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(TileSetPal, sizeof(TileSetPal)));
 
     bg_statics = std::unique_ptr<Background>(new Background(0, TileSetTiles, sizeof(TileSetTiles),
@@ -44,16 +56,34 @@ void TestScene::load(){
                                                         blauwe_achtergrond, sizeof(blauwe_achtergrond),
                                                         25,3,MAPLAYOUT_32X32));
 
+    player.setBuilder(builder);
 
 
-};
 
-void TestScene::tick(u16 keys){
+    };
+
+void TestScene::tick(u16 keys) {
     //Scroll voor dynamic background
-    scrollXcounter += 1;
-    if(scrollXcounter % 50 ==0) {
-        scrollX ++;
+    player.isIdle(moveUp, moveDown, moveLeft, moveRight);
+    timer += 1;
+    if (timer % 50 == 0) {
+        scrollX++;
         bg_dynamics.get()->scroll(scrollX, 0);
     }
-    // end scroll dynamic background
+    if(keys & KEY_B){
+        moveLeft = keys & KEY_LEFT;
+        moveRight = keys & KEY_RIGHT;
+        moveUp = keys & KEY_UP;
+        moveDown = keys & KEY_DOWN;
+        move();
+    }
+    else {
+    if (timer % 2 == 0) {
+        moveLeft = keys & KEY_LEFT;
+        moveRight = keys & KEY_RIGHT;
+        moveUp = keys & KEY_UP;
+        moveDown = keys & KEY_DOWN;
+        move();
+    }
+}
 };
