@@ -27,34 +27,36 @@ std::vector<Sprite *> TestScene::sprites(){
 
 std::vector<Background *> TestScene::backgrounds() {
     return {
-        bg_statics.get(),
-        bg_dynamics.get(),
-        bg_sky.get(),
-        bg_sky2.get()
+            bg_statics.get(),
+            bg_dynamics.get(),
+            bg_3_filler.get(),
     };
 }
 
 void TestScene::move() {
-    player.move(moveUp, moveDown, moveLeft, moveRight);
+    player.move(moveUp, moveDown, moveLeft, moveRight, this->collision_map_test_scene);
+
+
 }
 
 void TestScene::load(){
-
+    engine.get()->enableText();
     foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(new ForegroundPaletteManager(SharedPal, sizeof(SharedPal)));
-    backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(TileSetPal, sizeof(TileSetPal)));
+    backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(sharedPal, sizeof(sharedPal)));
 
-    bg_statics = std::unique_ptr<Background>(new Background(0, TileSetTiles, sizeof(TileSetTiles),
-                                                            fantasyplatformer_statics, sizeof(fantasyplatformer_statics),
-                                                            3,0,MAPLAYOUT_32X32));
-    bg_dynamics = std::unique_ptr<Background>(new Background(1, TileSetTiles, sizeof(TileSetTiles),
-                                                             fantasyplatformer_dynamics, sizeof(fantasyplatformer_dynamics),
-                                                             21,2, MAPLAYOUT_32X32));
-    bg_sky = std::unique_ptr<Background>(new Background(2, blauwTiles, sizeof(blauwTiles),
-                                                        blauwe_achtergrond, sizeof(blauwe_achtergrond),
-                                                        25,3,MAPLAYOUT_32X32));
-    bg_sky2 = std::unique_ptr<Background>(new Background(3, blauwTiles, sizeof(blauwTiles),
-                                                        blauwe_achtergrond, sizeof(blauwe_achtergrond),
-                                                        25,3,MAPLAYOUT_32X32));
+    bg_statics = std::unique_ptr<Background>(new Background(1, staticsTiles, sizeof(staticsTiles),
+                                                            statics_map, sizeof(statics_map),
+                                                            18, 1, MAPLAYOUT_32X32));
+    bg_dynamics = std::unique_ptr<Background>(new Background(2, cloudsTiles, sizeof(cloudsTiles),
+                                                             clouds_map, sizeof(clouds_map),
+                                                             14, 2, MAPLAYOUT_32X32));
+    bg_3_filler = std::unique_ptr<Background>(new Background(3, cloudsTiles, sizeof(cloudsTiles),
+                                                             clouds_map, sizeof(clouds_map),
+                                                             14, 3, MAPLAYOUT_32X32));
+    //is hetzelfde als
+    //bg_statics->useMapScreenBlock(18);
+    //bg_dynamics->useMapScreenBlock(14);
+    //bg_3_filler->useMapScreenBlock(14);
 
     player.setBuilder(builder);
 
@@ -65,6 +67,9 @@ void TestScene::load(){
 void TestScene::tick(u16 keys) {
     //Scroll voor dynamic background
     player.isIdle(moveUp, moveDown, moveLeft, moveRight);
+    TextStream::instance().clear();
+    TextStream::instance().setText(std::to_string(player.getPosX()), 1, 1);
+    TextStream::instance().setFontColor(BLD_WHITE);
     timer += 1;
     if (timer % 50 == 0) {
         scrollX++;
