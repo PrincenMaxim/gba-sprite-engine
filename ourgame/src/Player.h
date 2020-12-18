@@ -5,25 +5,34 @@
 #ifndef GBA_SPRITE_ENGINE_PROJECT_PLAYER_H
 #define GBA_SPRITE_ENGINE_PROJECT_PLAYER_H
 
+#include <cmath>
 #include <libgba-sprite-engine/scene.h>
 #include <libgba-sprite-engine/sprites/sprite_builder.h>
 
 class Player {
 private:
-    bool idle;
+    bool idle = true;
     int posX;
     int posY;
+    int startY;
+    int animationSpeed;
 
 public:
     std::unique_ptr<Sprite> playerIdleSprite;
     std::unique_ptr<Sprite> playerWalkingSprite;
-    void setBuilder(SpriteBuilder<Sprite> builder);
+    void setBuilder(SpriteBuilder<Sprite> builder, int startY);
     std::vector<Sprite *> getSprite();
     void isIdle(bool up, bool down, bool left, bool right);
-    void move(bool up, bool down, bool left, bool right, int collisionMap[20][30]);
-    bool canMove(bool up, bool down, bool left, bool right, int collisionMap[20][30]);
+    void move(bool up, bool down, bool left, bool right, int collision_map[20][30], bool bPressed);
+    int calcTileX();
+    int calcTileY();
+    void setPosY(int y){this->posY = y;}
     int getPosX(){return posX;}
     int getPosY(){return posY;}
+    void setStartY(int y){this->startY = y;}
+    int getAnimationSpeed(){return animationSpeed;}
+    int getStartY(){return startY;}
+    int collision(bool up, bool down, bool left, bool right, int collision_map[20][30]);
 
 };
 

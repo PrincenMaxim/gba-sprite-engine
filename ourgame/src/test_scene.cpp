@@ -33,11 +33,11 @@ std::vector<Background *> TestScene::backgrounds() {
     };
 }
 
-void TestScene::move() {
-    player.move(moveUp, moveDown, moveLeft, moveRight, this->collision_map_test_scene);
 
 
-}
+
+
+
 
 void TestScene::load(){
     engine.get()->enableText();
@@ -58,7 +58,7 @@ void TestScene::load(){
     //bg_dynamics->useMapScreenBlock(14);
     //bg_3_filler->useMapScreenBlock(14);
 
-    player.setBuilder(builder);
+    player.setBuilder(builder,startY);
 
 
 
@@ -68,27 +68,34 @@ void TestScene::tick(u16 keys) {
     //Scroll voor dynamic background
     player.isIdle(moveUp, moveDown, moveLeft, moveRight);
     TextStream::instance().clear();
-    TextStream::instance().setText(std::to_string(player.getPosX()), 1, 1);
+    TextStream::instance().setText("Future Collision: " + std::to_string(
+            player.collision(moveUp,moveDown,moveLeft,moveRight,collision_map_test_scene)),1,1);
+    TextStream::instance().setText("Player animation speed: " + std::to_string(player.getAnimationSpeed()),2,1);
+    TextStream::instance().setText("TileX: " + std::to_string(player.calcTileX()),3,1);
+    TextStream::instance().setText("TileY: " + std::to_string(player.calcTileY()),4,1);
+
     TextStream::instance().setFontColor(BLD_WHITE);
     timer += 1;
     if (timer % 50 == 0) {
         scrollX++;
         bg_dynamics.get()->scroll(scrollX, 0);
     }
+    moveLeft = keys & KEY_LEFT;
+    moveRight = keys & KEY_RIGHT;
+    moveUp = keys & KEY_UP;
+    moveDown = keys & KEY_DOWN;
+    bPressed = keys & KEY_B;
+    //running
     if(keys & KEY_B){
-        moveLeft = keys & KEY_LEFT;
-        moveRight = keys & KEY_RIGHT;
-        moveUp = keys & KEY_UP;
-        moveDown = keys & KEY_DOWN;
-        move();
+
+        player.move(moveUp, moveDown, moveLeft, moveRight, this->collision_map_test_scene, bPressed);
     }
+    //walking
     else {
-    if (timer % 2 == 0) {
-        moveLeft = keys & KEY_LEFT;
-        moveRight = keys & KEY_RIGHT;
-        moveUp = keys & KEY_UP;
-        moveDown = keys & KEY_DOWN;
-        move();
+        if (timer % 2 == 0) {
+
+            player.move(moveUp, moveDown, moveLeft, moveRight, this->collision_map_test_scene, bPressed);
+        }
     }
-}
+
 };
