@@ -15,6 +15,8 @@ private:
     int posX;
     int posY;
     int startY;
+    int xVelocity = 1;
+    int yVelocity = 1;
     int animationSpeed;
 
 public:
@@ -33,6 +35,7 @@ public:
     int getAnimationSpeed(){return animationSpeed;}
     int getStartY(){return startY;}
     int collision(bool up, bool down, bool left, bool right, int collision_map[20][30]);
+    bool isOnGround(int collision_map[20][30]);
 
 };
 

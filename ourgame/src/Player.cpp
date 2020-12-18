@@ -61,6 +61,13 @@ int Player::collision(bool up, bool down, bool left, bool right, int collision_m
     return 0;
 }
 
+bool Player::isOnGround(int collision_map[20][30]) {
+    int playerTileY = calcTileY();
+    int playerTileX = calcTileX();
+    if(collision_map[playerTileY][playerTileX] == 1) return 1;
+    else return 0;
+}
+
 
 void Player::move(bool up, bool down, bool left, bool right, int collision_map[20][30], bool bPressed) {
     if (bPressed) animationSpeed = 2;
@@ -76,11 +83,6 @@ void Player::move(bool up, bool down, bool left, bool right, int collision_map[2
 
     }
     else {
-
-        if (!playerWalkingSprite->isAnimating())playerWalkingSprite->makeAnimated(0, 6, 8 / getAnimationSpeed());
-        if (!playerIdleSprite->isOffScreen())
-            playerWalkingSprite->moveTo(playerIdleSprite->getX(), playerIdleSprite->getY());
-
         if (playerWalkingSprite->getAnimationDelay() != 8 / getAnimationSpeed()) {
             playerWalkingSprite->stopAnimating();
             playerWalkingSprite->animateToFrame(6);
@@ -96,12 +98,12 @@ void Player::move(bool up, bool down, bool left, bool right, int collision_map[2
             playerIdleSprite->animateToFrame(0);
 
 
-            /*if (!playerWalkingSprite->isAnimating())playerWalkingSprite->makeAnimated(0, 6, 8 / getAnimationSpeed());
+            if (!playerWalkingSprite->isAnimating())playerWalkingSprite->makeAnimated(0, 6, 8 / getAnimationSpeed());
             if (!playerIdleSprite->isOffScreen())
-                playerWalkingSprite->moveTo(playerIdleSprite->getX(), playerIdleSprite->getY());*/
+                playerWalkingSprite->moveTo(playerIdleSprite->getX(), playerIdleSprite->getY());
             playerWalkingSprite->moveTo(playerWalkingSprite->getX() + 1, playerWalkingSprite->getY());
             playerIdleSprite->moveTo(playerWalkingSprite->getX(), GBA_SCREEN_HEIGHT + 32);
-            posX = posX + 1;
+            posX = posX + xVelocity;
 
 
             if (up && playerWalkingSprite->getY() > 0 && playerIdleSprite->getY() > 0) {
@@ -129,12 +131,12 @@ void Player::move(bool up, bool down, bool left, bool right, int collision_map[2
             playerIdleSprite->flipHorizontally(1);
             playerIdleSprite->stopAnimating();
             playerIdleSprite->animateToFrame(0);
-            /*if (!playerWalkingSprite->isAnimating())playerWalkingSprite->makeAnimated(0, 6, 8 / getAnimationSpeed());
+            if (!playerWalkingSprite->isAnimating())playerWalkingSprite->makeAnimated(0, 6, 8 / getAnimationSpeed());
             if (!playerIdleSprite->isOffScreen())
-                playerWalkingSprite->moveTo(playerIdleSprite->getX(), playerIdleSprite->getY());*/
+                playerWalkingSprite->moveTo(playerIdleSprite->getX(), playerIdleSprite->getY());
             playerWalkingSprite->moveTo(playerWalkingSprite->getX() - 1, playerWalkingSprite->getY());
             playerIdleSprite->moveTo(playerWalkingSprite->getX(), GBA_SCREEN_HEIGHT + 32);
-            posX = posX - 1;
+            posX = posX - xVelocity;
 
             if (up && playerWalkingSprite->getY() > 0 && playerIdleSprite->getY() > 0) {
                 if (!playerWalkingSprite->isAnimating())playerWalkingSprite->makeAnimated(0, 6, 8 / getAnimationSpeed());
@@ -156,9 +158,9 @@ void Player::move(bool up, bool down, bool left, bool right, int collision_map[2
         } else if (up && playerWalkingSprite->getY() > 0 && playerIdleSprite->getY() > 0
                    && collision(up, down, left, right, collision_map) != 1) {
 
-            /*if (!playerWalkingSprite->isAnimating())playerWalkingSprite->makeAnimated(0, 6, 8 / getAnimationSpeed());
+            if (!playerWalkingSprite->isAnimating())playerWalkingSprite->makeAnimated(0, 6, 8 / getAnimationSpeed());
             if (!playerIdleSprite->isOffScreen())
-                playerWalkingSprite->moveTo(playerIdleSprite->getX(), playerIdleSprite->getY());*/
+                playerWalkingSprite->moveTo(playerIdleSprite->getX(), playerIdleSprite->getY());
             playerWalkingSprite->moveTo(playerWalkingSprite->getX(), playerWalkingSprite->getY() - 1);
             playerIdleSprite->moveTo(playerWalkingSprite->getX(), GBA_SCREEN_HEIGHT + 32);
             posY = posY - 1;
@@ -166,14 +168,15 @@ void Player::move(bool up, bool down, bool left, bool right, int collision_map[2
                    playerIdleSprite->getY() <= GBA_SCREEN_HEIGHT + 32
                    && collision(up, down, left, right, collision_map) != 1) {
 
-            /*if (!playerWalkingSprite->isAnimating())playerWalkingSprite->makeAnimated(0, 6, 8 / getAnimationSpeed());
+            if (!playerWalkingSprite->isAnimating())playerWalkingSprite->makeAnimated(0, 6, 8 / getAnimationSpeed());
             if (!playerIdleSprite->isOffScreen())
-                playerWalkingSprite->moveTo(playerIdleSprite->getX(), playerIdleSprite->getY());*/
+                playerWalkingSprite->moveTo(playerIdleSprite->getX(), playerIdleSprite->getY());
             playerWalkingSprite->moveTo(playerWalkingSprite->getX(), playerWalkingSprite->getY() + 1);
             playerIdleSprite->moveTo(playerWalkingSprite->getX(), GBA_SCREEN_HEIGHT + 32);
             posY = posY + 1;
-            }
         }
-
-
+    }
+    if(!isOnGround(collision_map)){
+        posY = posY + 1;
+    }
 }

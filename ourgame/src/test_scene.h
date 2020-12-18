@@ -27,7 +27,7 @@ private:
     bool moveUp = 0;
     bool bPressed = 0;
     int groundY;
-    int startY = 40; //where player starts on ground;
+    int startY = 20; //where player starts on ground;
 
     //Collision map
     /*Template voor gba :

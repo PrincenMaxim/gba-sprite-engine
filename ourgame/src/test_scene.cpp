@@ -73,6 +73,7 @@ void TestScene::tick(u16 keys) {
     TextStream::instance().setText("Player animation speed: " + std::to_string(player.getAnimationSpeed()),2,1);
     TextStream::instance().setText("TileX: " + std::to_string(player.calcTileX()),3,1);
     TextStream::instance().setText("TileY: " + std::to_string(player.calcTileY()),4,1);
+    TextStream::instance().setText("IsOnGround: " + std::to_string(player.isOnGround(collision_map_test_scene)),5,1);
 
     TextStream::instance().setFontColor(BLD_WHITE);
     timer += 1;
