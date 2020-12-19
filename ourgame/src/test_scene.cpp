@@ -66,21 +66,27 @@ void TestScene::load(){
 
 void TestScene::tick(u16 keys) {
     //Scroll voor dynamic background
-    player.isIdle(moveUp, moveDown, moveLeft, moveRight);
+
     TextStream::instance().clear();
-    TextStream::instance().setText("Future Collision: " + std::to_string(
-            player.collision(moveUp,moveDown,moveLeft,moveRight,collision_map_test_scene)),1,1);
-    TextStream::instance().setText("Player animation speed: " + std::to_string(player.getAnimationSpeed()),2,1);
-    TextStream::instance().setText("TileX: " + std::to_string(player.calcTileX()),3,1);
-    TextStream::instance().setText("TileY: " + std::to_string(player.calcTileY()),4,1);
+    TextStream::instance().setText("X: " + std::to_string(player.getPosX()),1,1);
+    TextStream::instance().setText("Y: " + std::to_string(player.getPosY()),2,1);
+    /*TextStream::instance().setText("TileX: " + std::to_string(player.calcTileX()),3,1);
+    TextStream::instance().setText("TileY: " + std::to_string(player.calcTileY()),4,1);*/
+    TextStream::instance().setText("Jumptimer: " + std::to_string(player.getJumpTimer()),4,1);
     TextStream::instance().setText("IsOnGround: " + std::to_string(player.isOnGround(collision_map_test_scene)),5,1);
 
     TextStream::instance().setFontColor(BLD_WHITE);
     timer += 1;
-    if (timer % 50 == 0) {
+    if (timer % 30 == 0) {
         scrollX++;
         bg_dynamics.get()->scroll(scrollX, 0);
     }
+
+    if(timer % 2 == 0){
+
+    }
+
+
     moveLeft = keys & KEY_LEFT;
     moveRight = keys & KEY_RIGHT;
     moveUp = keys & KEY_UP;
@@ -88,15 +94,16 @@ void TestScene::tick(u16 keys) {
     bPressed = keys & KEY_B;
     //running
     if(keys & KEY_B){
-
         player.move(moveUp, moveDown, moveLeft, moveRight, this->collision_map_test_scene, bPressed);
     }
     //walking
     else {
         if (timer % 2 == 0) {
-
             player.move(moveUp, moveDown, moveLeft, moveRight, this->collision_map_test_scene, bPressed);
         }
     }
+    player.isIdle(moveUp, moveDown, moveLeft, moveRight);
+    player.setGravity(this->collision_map_test_scene);
+    player.fellOfMap(this->collision_map_test_scene);
 
 };

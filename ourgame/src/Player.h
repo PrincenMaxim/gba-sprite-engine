@@ -12,12 +12,16 @@
 class Player {
 private:
     bool idle = true;
-    int posX;
+    int posX = 0;
     int posY;
     int startY;
     int xVelocity = 1;
-    int yVelocity = 1;
-    int animationSpeed;
+    int yVelocity = 2;
+    int animationSpeed = 1;
+    bool pressedJump = false;
+    int jumpTimer=0;
+    bool bPressed = false;
+    std::string prominentSprite;
 
 public:
     std::unique_ptr<Sprite> playerIdleSprite;
@@ -34,9 +38,15 @@ public:
     void setStartY(int y){this->startY = y;}
     int getAnimationSpeed(){return animationSpeed;}
     int getStartY(){return startY;}
+    void setGravity(int collision_map[20][30]);
     int collision(bool up, bool down, bool left, bool right, int collision_map[20][30]);
     bool isOnGround(int collision_map[20][30]);
+    void jump();
+    int getJumpTimer(){return this->jumpTimer;}
+    bool getJumped(){return this->pressedJump;};
+    int getYvel(){return this->yVelocity;}
 
+    void fellOfMap(int collision_map[20][30]);
 };
 
 
