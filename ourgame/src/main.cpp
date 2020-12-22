@@ -5,13 +5,19 @@
 #include <libgba-sprite-engine/palette/palette_manager.h>
 #include <libgba-sprite-engine/allocator.h>
 
-#include "test_scene.h"
+#include "level1_scene.h"
+#include "level0_scene.h"
+#include "title_scene.h"
+#include "floatingIslands_scene.h"
 
 int main() {
     std::shared_ptr<GBAEngine> engine(new GBAEngine());
 
-    TestScene* testScene = new TestScene(engine);
-    engine->setScene(testScene);
+    title_scene* titleScene = new title_scene(engine);
+    engine->setScene(titleScene);
+
+    //floatingIslands_scene* floatingIslandsScene = new floatingIslands_scene(engine, 1);
+    //engine->setScene(floatingIslandsScene);
 
     while (true) {
         engine->update();

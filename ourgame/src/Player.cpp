@@ -4,7 +4,9 @@
 
 #include "Player.h"
 #include <libgba-sprite-engine/gba_engine.h>
-#include "sprites/player_idle_sprite.h"
+#include "sprites/pink_guy_sprites.h"
+#include "sprites/owlet_sprites.h"
+#include "sprites/dude_sprites.h"
 
 std::vector<Sprite *>Player::getSprite() {
     std::vector<Sprite *> sprites;
@@ -15,21 +17,52 @@ std::vector<Sprite *>Player::getSprite() {
 }
 
 
-void Player::setBuilder(SpriteBuilder<Sprite> builder, int startY) {
-    playerIdleSprite = builder
-            .withData(idleTiles, sizeof(idleTiles))
-            .withSize(SIZE_32_32)
-            .withLocation(0,startY)
-            .withinBounds()
-            .buildPtr();
+void Player::setBuilder(SpriteBuilder<Sprite> builder, int startY, int skin) {
+    switch(skin){
+        case 0 :
+            playerIdleSprite = builder
+                    .withData(pink_guy_idleTiles, sizeof(pink_guy_idleTiles))
+                    .withSize(SIZE_32_32)
+                    .withLocation(0,startY)
+                    .withinBounds()
+                    .buildPtr();
+            playerWalkingSprite = builder
+                    .withData(pink_guy_walkTiles, sizeof(pink_guy_walkTiles))
+                    .withSize(SIZE_32_32)
+                    .withLocation(0,startY)
+                    .withinBounds()
+                    .buildPtr();
+            break;
+        case 1 :
+            playerIdleSprite = builder
+                    .withData(owlet_idleTiles, sizeof(owlet_idleTiles))
+                    .withSize(SIZE_32_32)
+                    .withLocation(0,startY)
+                    .withinBounds()
+                    .buildPtr();
+            playerWalkingSprite = builder
+                    .withData(owlet_walkTiles, sizeof(owlet_walkTiles))
+                    .withSize(SIZE_32_32)
+                    .withLocation(0,startY)
+                    .withinBounds()
+                    .buildPtr();
+            break;
+        case 2 :
+            playerIdleSprite = builder
+                    .withData(dude_idleTiles, sizeof(dude_idleTiles))
+                    .withSize(SIZE_32_32)
+                    .withLocation(0,startY)
+                    .withinBounds()
+                    .buildPtr();
+            playerWalkingSprite = builder
+                    .withData(dude_walkTiles, sizeof(dude_walkTiles))
+                    .withSize(SIZE_32_32)
+                    .withLocation(0,startY)
+                    .withinBounds()
+                    .buildPtr();
+            break;
 
-    playerWalkingSprite = builder
-            .withData(walkTiles, sizeof(walkTiles))
-            .withSize(SIZE_32_32)
-            .withLocation(0,startY)
-            .withinBounds()
-            .buildPtr();
-
+    }
     setStartY(startY);
     setPosY(startY);
 }
@@ -50,31 +83,64 @@ int Player::calcTileY(){
     return round(posY/8);
 }
 
-int Player::collision(bool up, bool down, bool left, bool right, int collision_map[20][30]) {
+int Player::collision(bool up, bool down, bool left, bool right, int collision_map_32[20][32], int collision_map_64[20][64], int mapWidth) {
 
-    if (up && collision_map[calcTileY()-4][calcTileX()] == 1) return 1;// calcTileY()-4 for character tile height
+    if(mapWidth == 256) {
+        if (up && collision_map_32[calcTileY() - 4][calcTileX()] == 1)
+            return 1;// calcTileY()-4 for character tile height
 
-    if (down && collision_map[calcTileY()][calcTileX()] == 1) return 1;
+        if (down && collision_map_32[calcTileY()][calcTileX()] == 1) return 1;
 
-    if (right && collision_map[calcTileY()-1][calcTileX()+1]==1) return 1;
+        if (right && collision_map_32[calcTileY() - 1][calcTileX() + 1] == 1) return 1;
 
-    if (left && collision_map[calcTileY()-1][calcTileX()-1]==1) return 1;
+        if (left && collision_map_32[calcTileY() - 1][calcTileX() - 1] == 1) return 1;
 
-    if(!isOnGround(collision_map) && left && collision_map[calcTileY()][calcTileX()-1]==1) return 1;
+        if (!isOnGround(collision_map_32, collision_map_64, mapWidth) && left &&
+            collision_map_32[calcTileY()][calcTileX() - 1] == 1)
+            return 1;
+        if (!isOnGround(collision_map_32, collision_map_64, mapWidth) && right &&
+            collision_map_32[calcTileY()][calcTileX() + 1] == 1)
+            return 1;
 
-    if(!isOnGround(collision_map) && right && collision_map[calcTileY()][calcTileX()+1]==1) return 1;
+        return 0;
+    }
+    else if(mapWidth == 512) {
+        if (up && collision_map_64[calcTileY() - 4][calcTileX()] == 1)
+            return 1;// calcTileY()-4 for character tile height
 
-    return 0;
+        if (down && collision_map_64[calcTileY()][calcTileX()] == 1) return 1;
+
+        if (right && collision_map_64[calcTileY() - 1][calcTileX() + 1] == 1) return 1;
+
+        if (left && collision_map_64[calcTileY() - 1][calcTileX() - 1] == 1) return 1;
+
+        if (!isOnGround(collision_map_32, collision_map_64, mapWidth) && left &&
+            collision_map_64[calcTileY()][calcTileX() - 1] == 1)
+            return 1;
+        if (!isOnGround(collision_map_32, collision_map_64, mapWidth) && right &&
+            collision_map_64[calcTileY()][calcTileX() + 1] == 1)
+            return 1;
+
+        return 0;
+    }
 }
 
-bool Player::isOnGround(int collision_map[20][30]) {
-    int playerTileY = calcTileY();
-    int playerTileX = calcTileX();
-    if(collision_map[playerTileY][playerTileX] == 1) return 1;
-    else return 0;
+bool Player::isOnGround(int collision_map_32[20][32], int collision_map_64[20][64], int mapWidth) {
+    if(mapWidth == 256) {
+        int playerTileY = calcTileY();
+        int playerTileX = calcTileX();
+        if (collision_map_32[playerTileY][playerTileX] == 1) return 1;
+        else return 0;
+    }
+    else if(mapWidth == 512) {
+        int playerTileY = calcTileY();
+        int playerTileX = calcTileX();
+        if (collision_map_64[playerTileY][playerTileX] == 1) return 1;
+        else return 0;
+    }
 }
 
-void Player::setGravity(int collision_map[20][30]){
+void Player::setGravity(int collision_map_32[20][32], int collision_map_64[20][64], int mapWidth, int scrollStatics){
 
     if( this->prominentSprite == "idle") {
         playerIdleSprite->moveTo(posX,posY);
@@ -86,13 +152,13 @@ void Player::setGravity(int collision_map[20][30]){
         playerIdleSprite->moveTo(posX,GBA_SCREEN_HEIGHT+32);
     }
 
-    if(!isOnGround(collision_map) && !pressedJump){
+    if(!isOnGround(collision_map_32, collision_map_64, mapWidth) && !pressedJump){
         posY = posY + yVelocity;
     }
     if(pressedJump){
         jumpTimer ++;
-        if(!isOnGround(collision_map)) {
-            if (jumpTimer == 2) posY -= 2* yVelocity;
+        if(!isOnGround(collision_map_32, collision_map_64, mapWidth)) {
+            if (jumpTimer == 2) posY -=  yVelocity;
             if (jumpTimer >2 && jumpTimer <= 14) posY -= 1* yVelocity;
             if (jumpTimer == 15) ;
             if (jumpTimer == 16) ;
@@ -100,7 +166,7 @@ void Player::setGravity(int collision_map[20][30]){
         }
     }
 
-    if(isOnGround(collision_map)){
+    if(isOnGround(collision_map_32,collision_map_64,mapWidth)){
         pressedJump = false;
         jumpTimer = 0;
     }
@@ -112,7 +178,8 @@ void Player::jump(){
     }
 }
 
-void Player::move(bool up, bool down, bool left, bool right, int collision_map[20][30], bool bPressed) {
+void Player::move(bool up, bool down, bool left, bool right, int collision_map_32[20][32], int collision_map_64[20][64],
+                  bool bPressed, int mapWidth, int scrollStatics) {
     if (bPressed){
         animationSpeed = 2;
         this->bPressed = true;
@@ -133,7 +200,7 @@ void Player::move(bool up, bool down, bool left, bool right, int collision_map[2
     }
     else {
 
-        if(collision(up,down,left,right,collision_map) == 0 && posX>=0){
+        if(collision(up,down,left,right,collision_map_32, collision_map_64, mapWidth) == 0 && posX>=0){
             this->prominentSprite = "walk";
         }
         else this->prominentSprite = "idle";
@@ -145,37 +212,36 @@ void Player::move(bool up, bool down, bool left, bool right, int collision_map[2
             playerWalkingSprite->makeAnimated(0, 6, 8 / getAnimationSpeed());
         }
 
-        if (right && up && posY > 0 && posX < GBA_SCREEN_WIDTH - 24
-            && collision(up, down, left, right, collision_map) != 1
-            && isOnGround(collision_map) && !pressedJump ) {
+        if (right && up && posX < mapWidth - 24 && posY >0
+            && collision(up, down, left, right, collision_map_32, collision_map_64, mapWidth) != 1
+            && isOnGround(collision_map_32, collision_map_64, mapWidth) && !pressedJump ) {
 
             if (!playerWalkingSprite->isAnimating())playerWalkingSprite->makeAnimated(0, 6, 8 / getAnimationSpeed());
             playerIdleSprite->moveTo(0, GBA_SCREEN_HEIGHT + 32);
             posX = posX + xVelocity;
             posY = posY - yVelocity;
             jump();
-            setGravity(collision_map);
             playerWalkingSprite->moveTo(posX, posY);
 
 
 
         }
 
-        else if (left && up && posY > 0 && posX > 0
-                   && collision(up, down, left, right, collision_map) != 1
-                   && !pressedJump && isOnGround(collision_map)) {
+        else if (left && up  && posX >= 0
+                   && collision(up, down, left, right, collision_map_32, collision_map_64, mapWidth) != 1
+                   && !pressedJump && isOnGround(collision_map_32, collision_map_64, mapWidth)) {
             playerIdleSprite->moveTo(0, GBA_SCREEN_HEIGHT + 32);
             if (!playerWalkingSprite->isAnimating())playerWalkingSprite->makeAnimated(0, 6, 8 / getAnimationSpeed());
+            jump();
             posX = posX - xVelocity;
             posY = posY - yVelocity;
-            jump();
             playerWalkingSprite->moveTo(posX, posY);
 
 
         }
 
-        else if (right && posX < GBA_SCREEN_WIDTH
-                   && collision(up, down, left, right, collision_map) != 1) {
+        else if (right && posX < mapWidth
+                   && collision(up, down, left, right, collision_map_32, collision_map_64, mapWidth) != 1) {
             playerIdleSprite->moveTo(0, GBA_SCREEN_HEIGHT + 32);
 
             playerWalkingSprite->flipHorizontally(0);
@@ -191,7 +257,7 @@ void Player::move(bool up, bool down, bool left, bool right, int collision_map[2
 
         }
 
-        else if (left && collision(up, down, left, right, collision_map) != 1 && posX>=0) {
+        else if (left && collision(up, down, left, right, collision_map_32, collision_map_64, mapWidth) != 1 && posX>=0) {
             playerIdleSprite->moveTo(0, GBA_SCREEN_HEIGHT + 32);
 
             playerWalkingSprite->flipHorizontally(1);
@@ -208,18 +274,17 @@ void Player::move(bool up, bool down, bool left, bool right, int collision_map[2
 
         }
 
-        else if (up  && collision(up, down, left, right, collision_map) != 1 && !pressedJump &&
-                   isOnGround(collision_map)) {
+        else if (up  && collision(up, down, left, right, collision_map_32, collision_map_64, mapWidth) != 1 && !pressedJump &&
+                   isOnGround(collision_map_32, collision_map_64, mapWidth)) {
             playerIdleSprite->moveTo(0, GBA_SCREEN_HEIGHT + 32);
             if (!playerWalkingSprite->isAnimating())playerWalkingSprite->makeAnimated(0, 6, 8 / getAnimationSpeed());
             posY = posY - yVelocity;
             jump();
-            setGravity(collision_map);
             playerWalkingSprite->moveTo(posX, posY);
         }
 
         else if (down && posY <= GBA_SCREEN_HEIGHT + 32
-                   && collision(up, down, left, right, collision_map) != 1) {
+                   && collision(up, down, left, right, collision_map_32, collision_map_64, mapWidth) != 1) {
             playerIdleSprite->moveTo(0, GBA_SCREEN_HEIGHT + 32);
             if (!playerWalkingSprite->isAnimating())playerWalkingSprite->makeAnimated(0, 6, 8 / getAnimationSpeed());
             posY = posY + yVelocity;
@@ -228,9 +293,17 @@ void Player::move(bool up, bool down, bool left, bool right, int collision_map[2
     }
 }
 
-void Player::fellOfMap(int collision_map[20][30] ) {
-    if(collision_map[calcTileY()][calcTileX()]==2){
-        posX = 0;
-        posY = startY;
+bool Player::fellOfMap(int collision_map_32[20][32], int collision_map_64[20][64], int mapWidth ) {
+    if(mapWidth == 256){
+        if(collision_map_32[calcTileY()][calcTileX()]==2){
+            return 1;
+        }
+        else return 0;
+    }
+    else if(mapWidth == 512){
+        if(collision_map_64[calcTileY()][calcTileX()]==2){
+            return 1;
+        }
+        else return 0;
     }
 }

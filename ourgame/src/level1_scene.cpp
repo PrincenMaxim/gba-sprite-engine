@@ -4,28 +4,29 @@
 
 #include <libgba-sprite-engine/sprites/affine_sprite.h>
 #include <libgba-sprite-engine/sprites/sprite_builder.h>
-#include <libgba-sprite-engine/gba/tonc_memmap.h>
 
 #include <libgba-sprite-engine/background/text_stream.h>
 #include <libgba-sprite-engine/gba/tonc_memdef.h>
 #include <libgba-sprite-engine/gba_engine.h>
 #include <libgba-sprite-engine/effects/fade_out_scene.h>
 
-#include "test_scene.h"
-#include "backgrounds/fantasyplatformer.h"
-#include <iostream>
+#include "level1_scene.h"
+#include "backgrounds/level1_input.h"
 #include <memory>
 
-#include "sprites/player_idle_sprite.h"
-#include "Player.h"
+#include "sprites/pink_guy_sprites.h"
+#include "sprites/owlet_sprites.h"
+#include "sprites/dude_sprites.h"
+#include "death_scene.h"
+#include "player.h"
 
 
 
-std::vector<Sprite *> TestScene::sprites(){
+std::vector<Sprite *> level1_scene::sprites(){
     return{player.getSprite()};
 };
 
-std::vector<Background *> TestScene::backgrounds() {
+std::vector<Background *> level1_scene::backgrounds() {
     return {
             bg_statics.get(),
             bg_dynamics.get(),
@@ -34,14 +35,22 @@ std::vector<Background *> TestScene::backgrounds() {
 }
 
 
-
-
-
-
-
-void TestScene::load(){
+void level1_scene::load(){
     engine.get()->enableText();
-    foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(new ForegroundPaletteManager(SharedPal, sizeof(SharedPal)));
+
+    switch(skin_choice){
+        case 0 :
+            foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(new ForegroundPaletteManager(pink_guy_sharedPal, sizeof(pink_guy_sharedPal)));
+            break;
+        case 1 :
+            foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(new ForegroundPaletteManager(owlet_sharedPal, sizeof(owlet_sharedPal)));
+            break;
+        case 2 :
+            foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(new ForegroundPaletteManager(dude_sharedPal, sizeof(dude_sharedPal)));
+            break;
+    }
+
+
     backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(sharedPal, sizeof(sharedPal)));
 
     bg_statics = std::unique_ptr<Background>(new Background(1, staticsTiles, sizeof(staticsTiles),
@@ -58,22 +67,21 @@ void TestScene::load(){
     //bg_dynamics->useMapScreenBlock(14);
     //bg_3_filler->useMapScreenBlock(14);
 
-    player.setBuilder(builder,startY);
-
+    player.setBuilder(builder,startY, skin_choice);
 
 
     };
 
-void TestScene::tick(u16 keys) {
+void level1_scene::tick(u16 keys) {
     //Scroll voor dynamic background
 
     TextStream::instance().clear();
     TextStream::instance().setText("X: " + std::to_string(player.getPosX()),1,1);
     TextStream::instance().setText("Y: " + std::to_string(player.getPosY()),2,1);
-    /*TextStream::instance().setText("TileX: " + std::to_string(player.calcTileX()),3,1);
-    TextStream::instance().setText("TileY: " + std::to_string(player.calcTileY()),4,1);*/
+    TextStream::instance().setText("Skin: " + std::to_string(player.getSkin()),3,1);
+    /*TextStream::instance().setText("TileY: " + std::to_string(player.calcTileY()),4,1);*/
     TextStream::instance().setText("Jumptimer: " + std::to_string(player.getJumpTimer()),4,1);
-    TextStream::instance().setText("IsOnGround: " + std::to_string(player.isOnGround(collision_map_test_scene)),5,1);
+    TextStream::instance().setText("IsOnGround: " + std::to_string(player.isOnGround(collisionMap_level1, nullptr,mapWidth)), 5, 1);
 
     TextStream::instance().setFontColor(BLD_WHITE);
     timer += 1;
@@ -82,9 +90,6 @@ void TestScene::tick(u16 keys) {
         bg_dynamics.get()->scroll(scrollX, 0);
     }
 
-    if(timer % 2 == 0){
-
-    }
 
 
     moveLeft = keys & KEY_LEFT;
@@ -93,17 +98,22 @@ void TestScene::tick(u16 keys) {
     moveDown = keys & KEY_DOWN;
     bPressed = keys & KEY_B;
     //running
-    if(keys & KEY_B){
-        player.move(moveUp, moveDown, moveLeft, moveRight, this->collision_map_test_scene, bPressed);
+    if(bPressed){
+        player.move(moveUp, moveDown, moveLeft, moveRight, this->collisionMap_level1, nullptr, bPressed, mapWidth, 0);
     }
     //walking
     else {
         if (timer % 2 == 0) {
-            player.move(moveUp, moveDown, moveLeft, moveRight, this->collision_map_test_scene, bPressed);
+            player.move(moveUp, moveDown, moveLeft, moveRight, this->collisionMap_level1, nullptr, bPressed, mapWidth, 0);
         }
     }
     player.isIdle(moveUp, moveDown, moveLeft, moveRight);
-    player.setGravity(this->collision_map_test_scene);
-    player.fellOfMap(this->collision_map_test_scene);
+    player.setGravity(this->collisionMap_level1, nullptr, mapWidth, 0);
+    if(player.fellOfMap(this->collisionMap_level1, nullptr, mapWidth)){
+        death_scene* deathScene = new death_scene(engine, skin_choice);
+        engine->transitionIntoScene(deathScene,new FadeOutScene(2));
+        bg_dynamics->scroll(0,0);
+
+    }
 
 };

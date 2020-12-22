@@ -13,7 +13,7 @@
 //
 //======================================================================
 
-const unsigned int idleTiles[1024] __attribute__((aligned(4)))=
+const unsigned int pink_guy_idleTiles[1024] __attribute__((aligned(4)))=
         {
                 0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,
                 0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,
@@ -178,7 +178,7 @@ const unsigned int idleTiles[1024] __attribute__((aligned(4)))=
 //
 //======================================================================
 
-const unsigned int walkTiles[1536] __attribute__((aligned(4)))=
+const unsigned int pink_guy_walkTiles[1536] __attribute__((aligned(4)))=
         {
                 0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,
                 0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,
@@ -400,7 +400,7 @@ const unsigned int walkTiles[1536] __attribute__((aligned(4)))=
 //}}BLOCK(walk)
 
 
-const unsigned short SharedPal[10] __attribute__((aligned(4)))=
+const unsigned short pink_guy_sharedPal[10] __attribute__((aligned(4)))=
         {
                 0x0000,0x1C60,0x7A3E,0x782F,0x7D1B,0x7FFF,0x780F,0x7A3E,
                 0x1C40,0x7CFB,
