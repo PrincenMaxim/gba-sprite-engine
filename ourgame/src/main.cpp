@@ -13,11 +13,11 @@
 int main() {
     std::shared_ptr<GBAEngine> engine(new GBAEngine());
 
-    title_scene* titleScene = new title_scene(engine);
-    engine->setScene(titleScene);
+    //title_scene* titleScene = new title_scene(engine);
+    //engine->setScene(titleScene);
 
-    //floatingIslands_scene* floatingIslandsScene = new floatingIslands_scene(engine, 1);
-    //engine->setScene(floatingIslandsScene);
+    floatingIslands_scene* floatingIslandsScene = new floatingIslands_scene(engine, 2);
+    engine->setScene(floatingIslandsScene);
 
     while (true) {
         engine->update();

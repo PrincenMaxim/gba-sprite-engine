@@ -25,6 +25,7 @@ private:
     int prevPosX;
     int prevPosY;
     std::string prominentSprite;
+    int jumpDirection;
 
 public:
     std::unique_ptr<Sprite> playerIdleSprite;
@@ -56,6 +57,8 @@ public:
     int getYvel(){return this->yVelocity;}
     void setSkin(int i){this->skin = i;}
     int getSkin(){return this->skin;}
+    void calcJumpDirection(bool up, bool left, bool right);
+    int getJumpDirection(){return this->jumpDirection;}
 
     bool fellOfMap(int collision_map_32[20][32], int collision_map_64[20][64], int mapWidth);
 };

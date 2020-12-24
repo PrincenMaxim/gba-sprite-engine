@@ -1,0 +1,14 @@
+//
+// Created by Gebruiker on 23/12/2020.
+//
+
+#ifndef GBA_SPRITE_ENGINE_PROJECT_TEMPLE_SCENE_H
+#define GBA_SPRITE_ENGINE_PROJECT_TEMPLE_SCENE_H
+
+
+class temple_scene {
+
+};
+
+
+#endif //GBA_SPRITE_ENGINE_PROJECT_TEMPLE_SCENE_H

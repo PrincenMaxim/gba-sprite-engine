@@ -70,45 +70,63 @@ void floatingIslands_scene::load() {
     //bg_dynamics->useMapScreenBlock(14);
     //bg_3_filler->useMapScreenBlock(14);
 
-    player.setBuilder(builder,startY, 1); //!!!!!!!!!!!!!!!hier nog skin_choice invullen!
+    player.setBuilder(builder,startY, 2); //!!!!!!!!!!!!!!!hier nog skin_choice invullen!
 }
 void floatingIslands_scene::tick(u16 keys){
     TextStream::instance().clear();
-    TextStream::instance().setText(std::to_string(player.calcTileX()),1,1);
-    TextStream::instance().setText(std::to_string(player.getPosX()),2,1);
+    moveLeft = keys & KEY_LEFT;
+    moveRight = keys & KEY_RIGHT;
+    moveUp = keys & KEY_UP;
+    moveDown = keys & KEY_DOWN;
+    bPressed = keys & KEY_B;
+    TextStream::instance().setText("x_tile: " + std::to_string(player.calcTileX()),1,1);
+    TextStream::instance().setText("y_tile: " + std::to_string(player.calcTileY()),2,1);
+    TextStream::instance().setText("jumpTimer: " + std::to_string(player.getJumpTimer()),3,1);
+    TextStream::instance().setText("collision: " + std::to_string(player.collision(moveUp, moveDown, moveLeft, moveRight,
+                                                                                   nullptr, collisionMap_floatingIslands, mapWidth)),4,1);
+    TextStream::instance().setFontColor(BLD_BG0);
+
+
     timer += 1;
     if (timer % 30 == 0) {
         scrollX++;
         bg_dynamics.get()->scroll(scrollX, 0);
     }
 
-    /*if(player.getPosX()%224==0){
-        bg_statics.get()->scroll(player.getPosX(),0);
+    if(player.getPosX()%1==0 && player.getPosX()>40 && keys & KEY_RIGHT && scrollStatics < 270 &&
+    player.collision(moveUp,moveDown,moveLeft,moveRight, nullptr, collisionMap_floatingIslands,mapWidth) == 0){
+        if(bPressed) scrollStatics += 2;
+        else scrollStatics += 1;
+        bg_statics.get()->scroll(scrollStatics,0);
 
-    }*/
+    }
+    if(player.getPosX()%1==0 && player.getPosX()>40 && keys & KEY_LEFT && scrollStatics > 0 && player.getPosX() < 200 &&
+    player.collision(moveUp,moveDown,moveLeft,moveRight, nullptr, collisionMap_floatingIslands,mapWidth) == 0){
+        if(bPressed) scrollStatics -= 2;
+        else scrollStatics -= 1;
+        bg_statics.get()->scroll(scrollStatics,0);
 
-    moveLeft = keys & KEY_LEFT;
-    moveRight = keys & KEY_RIGHT;
-    moveUp = keys & KEY_UP;
-    moveDown = keys & KEY_DOWN;
-    bPressed = keys & KEY_B;
+    }
+
+    player.calcJumpDirection(moveUp, moveLeft, moveRight);
+
     //running
     if(bPressed){
-        player.move(moveUp, moveDown, moveLeft, moveRight, nullptr, this->collisionMap_floatingIslands, bPressed, mapWidth, scrollX);
+        player.move(moveUp, moveDown, moveLeft, moveRight, nullptr, this->collisionMap_floatingIslands, bPressed, mapWidth, scrollStatics);
     }
         //walking
     else {
         if (timer % 2 == 0) {
-            player.move(moveUp, moveDown, moveLeft, moveRight, nullptr, this->collisionMap_floatingIslands, bPressed, mapWidth, scrollX);
+            player.move(moveUp, moveDown, moveLeft, moveRight, nullptr, this->collisionMap_floatingIslands, bPressed, mapWidth, scrollStatics);
         }
     }
     player.isIdle(moveUp, moveDown, moveLeft, moveRight);
-    player.setGravity(nullptr, this->collisionMap_floatingIslands, mapWidth, scrollX);
-    if(player.fellOfMap(nullptr, this->collisionMap_floatingIslands, mapWidth)){
+    player.setGravity(nullptr, this->collisionMap_floatingIslands, mapWidth, scrollStatics);
+    /*if(player.fellOfMap(nullptr, this->collisionMap_floatingIslands, mapWidth)){
         death_scene* deathScene = new death_scene(engine, skin_choice);
         engine->transitionIntoScene(deathScene,new FadeOutScene(2));
         bg_dynamics->scroll(0,0);
 
-    }
+    }*/
 }
 
