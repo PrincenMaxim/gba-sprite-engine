@@ -4,7 +4,7 @@
 
 #include "Player.h"
 #include <libgba-sprite-engine/gba_engine.h>
-#include "sprites/pink_guy_sprites.h"
+#include "sprites/pink_guy_coin_sprites.h"
 #include "sprites/owlet_sprites.h"
 #include "sprites/dude_sprites.h"
 
@@ -92,18 +92,18 @@ int Player::collision(bool up, bool down, bool left, bool right, int collision_m
     if(calcTileX()>0) {
         if (mapWidth == 256) {
             if(!isOnGround(collision_map_32, collision_map_64, mapWidth)){
-                if(calcTileY()>4){
-                    if (left && collision_map_32[calcTileY()-4][calcTileX()-1] == 1) return 1;
-                    else if (right && collision_map_32[calcTileY()-4][calcTileX() + 1] == 1  ) return 1;
+                if(calcTileY()>=0){
+                    if (left && collision_map_32[calcTileY()][calcTileX()-1] == 1) return 1;
+                    else if (right && collision_map_32[calcTileY()][calcTileX() + 1] == 1  ) return 1;
                     else return 0;
                 }
                 else return 0;
             }
             else {
-                if (right && collision_map_32[calcTileY() - 1][calcTileX() + 1] == 1) return 1;
-                else if (left && collision_map_32[calcTileY() - 1][calcTileX() - 1] == 1) return 1;
+                if (right && collision_map_32[calcTileY()-1][calcTileX() + 1] == 1) return 1;
+                else if (left && collision_map_32[calcTileY()-1][calcTileX() - 1] == 1) return 1;
 
-                else if (up && collision_map_32[calcTileY() - 4][calcTileX()] == 1 && calcTileY() > 0)
+                else if (up && collision_map_32[calcTileY() - 4][calcTileX()] == 1 && calcTileY() >= 4)
                     return 1;// calcTileY()-4 for character tile height
 
                 else if (down && collision_map_32[calcTileY()][calcTileX()] == 1) return 1;
@@ -114,18 +114,18 @@ int Player::collision(bool up, bool down, bool left, bool right, int collision_m
 
         } else if (mapWidth == 512) {
             if(!isOnGround(collision_map_32, collision_map_64, mapWidth)){
-                if(calcTileY()>4){
-                    if (left && collision_map_64[calcTileY()-4][calcTileX()-1] == 1) return 1;
-                    else if (right && collision_map_64[calcTileY()-4][calcTileX() + 1] == 1  ) return 1;
+                if(calcTileY()>=0){
+                    if (left && collision_map_64[calcTileY()][calcTileX()-1] == 1) return 1;
+                    else if (right && collision_map_64[calcTileY()][calcTileX() + 1] == 1  ) return 1;
                     else return 0;
                 }
                 else return 0;
             }
             else {
-                if (right && collision_map_64[calcTileY() - 1][calcTileX() + 1] == 1) return 1;
-                else if (left && collision_map_64[calcTileY() - 1][calcTileX() - 1] == 1) return 1;
+                if (right && collision_map_64[calcTileY()-1][calcTileX() + 1] == 1) return 1;
+                else if (left && collision_map_64[calcTileY()-1][calcTileX() - 1] == 1) return 1;
 
-                else if (up && collision_map_64[calcTileY() - 4][calcTileX()] == 1 && calcTileY() > 0)
+                else if (up && collision_map_64[calcTileY() - 4][calcTileX()] == 1 && calcTileY() >= 4)
                     return 1;// calcTileY()-4 for character tile height
 
                 else if (down && collision_map_64[calcTileY()][calcTileX()] == 1) return 1;

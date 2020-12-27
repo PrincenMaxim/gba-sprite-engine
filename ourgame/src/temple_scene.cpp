@@ -11,7 +11,7 @@
 #include <libgba-sprite-engine/effects/fade_out_scene.h>
 
 #include "backgrounds/temple_input.h"
-#include "sprites/pink_guy_sprites.h"
+#include "sprites/pink_guy_coin_sprites.h"
 #include "sprites/owlet_sprites.h"
 #include "sprites/dude_sprites.h"
 #include "death_scene.h"

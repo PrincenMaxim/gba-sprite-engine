@@ -9,7 +9,7 @@ add_executable(ourgame.elf
         src/level1_scene.h
         src/backgrounds/level1_input.h
         src/Player.cpp src/Player.h
-        src/sprites/pink_guy_sprites.h
+        src/sprites/pink_guy_coin_sprites.h
         src/backgrounds/level0_input.h
         src/level0_scene.cpp
         src/level0_scene.h
