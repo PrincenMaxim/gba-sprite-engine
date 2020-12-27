@@ -36,6 +36,7 @@ void floatingIslands_scene::load() {
     engine.get()->enableText();
 
 
+
     switch (skin_choice) {
         case 0 :
             foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(
@@ -70,7 +71,7 @@ void floatingIslands_scene::load() {
     //bg_dynamics->useMapScreenBlock(14);
     //bg_3_filler->useMapScreenBlock(14);
 
-    player.setBuilder(builder,startY, 2); //!!!!!!!!!!!!!!!hier nog skin_choice invullen!
+    player.setBuilder(builder,startY, skin_choice); //!!!!!!!!!!!!!!!hier nog skin_choice invullen!
 }
 void floatingIslands_scene::tick(u16 keys){
     TextStream::instance().clear();
@@ -122,11 +123,12 @@ void floatingIslands_scene::tick(u16 keys){
     }
     player.isIdle(moveUp, moveDown, moveLeft, moveRight);
     player.setGravity(nullptr, this->collisionMap_floatingIslands, mapWidth, scrollStatics);
-    /*if(player.fellOfMap(nullptr, this->collisionMap_floatingIslands, mapWidth)){
+    if(player.fellOfMap(nullptr, this->collisionMap_floatingIslands, mapWidth)){
         death_scene* deathScene = new death_scene(engine, skin_choice);
-        engine->transitionIntoScene(deathScene,new FadeOutScene(2));
-        bg_dynamics->scroll(0,0);
+        engine->transitionIntoScene(deathScene,new FadeOutScene(1));
+        bg_dynamics.get()->scroll(0, 0);
+        bg_statics.get()->scroll(0,0);
 
-    }*/
+    }
 }
 

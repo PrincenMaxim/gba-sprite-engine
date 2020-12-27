@@ -9,15 +9,22 @@
 #include "level0_scene.h"
 #include "title_scene.h"
 #include "floatingIslands_scene.h"
+#include "temple_scene.h"
 
 int main() {
     std::shared_ptr<GBAEngine> engine(new GBAEngine());
 
-    //title_scene* titleScene = new title_scene(engine);
-    //engine->setScene(titleScene);
+    title_scene* titleScene = new title_scene(engine);
+    engine->setScene(titleScene);
 
-    floatingIslands_scene* floatingIslandsScene = new floatingIslands_scene(engine, 2);
-    engine->setScene(floatingIslandsScene);
+    //level1_scene* level1Scene = new level1_scene(engine,0);
+    //engine->setScene(level1Scene);
+
+    //temple_scene* templeScene = new temple_scene(engine,2);
+    //engine->setScene(templeScene);
+
+    //floatingIslands_scene* floatingIslandsScene = new floatingIslands_scene(engine, 2);
+    //engine->setScene(floatingIslandsScene);
 
     while (true) {
         engine->update();

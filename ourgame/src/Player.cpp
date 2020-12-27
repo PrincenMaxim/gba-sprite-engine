@@ -89,47 +89,49 @@ void Player::calcJumpDirection(bool up, bool left, bool right) {
 }
 
 int Player::collision(bool up, bool down, bool left, bool right, int collision_map_32[20][32], int collision_map_64[20][64], int mapWidth) {
-    if(calcTileX()>=0 && calcTileY()>=0) {
+    if(calcTileX()>0) {
         if (mapWidth == 256) {
-            /*if (up && collision_map_32[calcTileY() - 4][calcTileX()] == 1)
-                return 1;// calcTileY()-4 for character tile height*/
+            if(!isOnGround(collision_map_32, collision_map_64, mapWidth)){
+                if(calcTileY()>4){
+                    if (left && collision_map_32[calcTileY()-4][calcTileX()-1] == 1) return 1;
+                    else if (right && collision_map_32[calcTileY()-4][calcTileX() + 1] == 1  ) return 1;
+                    else return 0;
+                }
+                else return 0;
+            }
+            else {
+                if (right && collision_map_32[calcTileY() - 1][calcTileX() + 1] == 1) return 1;
+                else if (left && collision_map_32[calcTileY() - 1][calcTileX() - 1] == 1) return 1;
 
-            if (down && collision_map_32[calcTileY()][calcTileX()] == 1) return 1;
+                else if (up && collision_map_32[calcTileY() - 4][calcTileX()] == 1 && calcTileY() > 0)
+                    return 1;// calcTileY()-4 for character tile height
 
-            else if (right && collision_map_32[calcTileY() - 1][calcTileX() + 1] == 1) return 1;
+                else if (down && collision_map_32[calcTileY()][calcTileX()] == 1) return 1;
 
-            else if (left && collision_map_32[calcTileY() - 1][calcTileX() - 1] == 1) return 1;
-
-            else if (!isOnGround(collision_map_32, collision_map_64, mapWidth) && left &&
-                collision_map_32[calcTileY()][calcTileX() - 1] == 1)
-                return 1;
-            else if (!isOnGround(collision_map_32, collision_map_64, mapWidth) && right &&
-                collision_map_32[calcTileY()][calcTileX() + 1] == 1)
-                return 1;
-
-            else return 0;
+                else return 0;
+            }
 
 
         } else if (mapWidth == 512) {
+            if(!isOnGround(collision_map_32, collision_map_64, mapWidth)){
+                if(calcTileY()>4){
+                    if (left && collision_map_64[calcTileY()-4][calcTileX()-1] == 1) return 1;
+                    else if (right && collision_map_64[calcTileY()-4][calcTileX() + 1] == 1  ) return 1;
+                    else return 0;
+                }
+                else return 0;
+            }
+            else {
+                if (right && collision_map_64[calcTileY() - 1][calcTileX() + 1] == 1) return 1;
+                else if (left && collision_map_64[calcTileY() - 1][calcTileX() - 1] == 1) return 1;
 
-            if (!isOnGround(collision_map_32, collision_map_64, mapWidth) && left &&
-                collision_map_64[calcTileY()-4][calcTileX() - 1] == 1)
-                return 1;
-            else if (!isOnGround(collision_map_32, collision_map_64, mapWidth) && right &&
-                collision_map_64[calcTileY()-4][calcTileX() + 1] == 1)
-                return 1;
-            else if (up && collision_map_64[calcTileY() - 4][calcTileX()] == 1)
-                return 1;// calcTileY()-4 for character tile height
+                else if (up && collision_map_64[calcTileY() - 4][calcTileX()] == 1 && calcTileY() > 0)
+                    return 1;// calcTileY()-4 for character tile height
 
-            else if (down && collision_map_64[calcTileY()][calcTileX()] == 1) return 1;
+                else if (down && collision_map_64[calcTileY()][calcTileX()] == 1) return 1;
 
-            else if (right && collision_map_64[calcTileY() - 1][calcTileX() + 1] == 1) return 1;
-
-            else if (left && collision_map_64[calcTileY() - 1][calcTileX() -1] == 1) return 1;
-
-
-
-            else return 0;
+                else return 0;
+            }
         }
         else return 0;
     }
@@ -141,12 +143,12 @@ bool Player::isOnGround(int collision_map_32[20][32], int collision_map_64[20][6
         if (mapWidth == 256) {
             int playerTileY = calcTileY();
             int playerTileX = calcTileX();
-            if (collision_map_32[playerTileY][playerTileX] == 1 && playerTileX >= 0 && playerTileY >= -4) return 1;
+            if ((collision_map_32[playerTileY][playerTileX] == 1)&& playerTileX >= 0 && playerTileY >= -4) return 1;
             else return 0;
         } else if (mapWidth == 512) {
             int playerTileY = calcTileY();
             int playerTileX = calcTileX();
-            if (collision_map_64[playerTileY][playerTileX] == 1 && playerTileX >= 0 && playerTileY >= -4) return 1;
+            if ((collision_map_64[playerTileY][playerTileX] == 1)&& playerTileX >= 0 && playerTileY >= -4) return 1;
             else return 0;
         } else return 0;
     }
@@ -164,61 +166,120 @@ void Player::setGravity(int collision_map_32[20][32], int collision_map_64[20][6
         playerWalkingSprite->moveTo(posX-scrollStatics,posY);
         playerIdleSprite->moveTo(posX,GBA_SCREEN_HEIGHT+32);
     }
-        if (!isOnGround(collision_map_32, collision_map_64, mapWidth) && !pressedJump && collision_map_64[calcTileY()][calcTileX()]!=1) {
+    if(mapWidth == 256){
+        if (!isOnGround(collision_map_32, collision_map_64, mapWidth) && !pressedJump &&
+            collision_map_32[calcTileY()][calcTileX()] != 1 ) {
             posY += yVelocity;
         }
         if (pressedJump) {
             jumpTimer++;
-            if (!isOnGround(collision_map_32, collision_map_64, mapWidth && collision_map_64[calcTileY()][calcTileX()]!=1)) {
-                if(calcTileY() >= 0 && jumpTimer == 0) {
-                    if(jumpDirection==0) {
-                        if (collision_map_64[calcTileY() - 4][calcTileX()] != 1) {
-                            if (jumpTimer <= 6) posY -= 2 * yVelocity;
-                            if (jumpTimer > 6 && jumpTimer <= 14) posY -= 1 * yVelocity;
-                            if (jumpTimer == 15);
-                            if (jumpTimer == 16);
-                            if (jumpTimer > 16) posY += yVelocity;
-                        } else {
-                            posY += yVelocity;
-                            jumpTimer = 16;
-                        }
-                    }
-                    if(jumpDirection==1) {
-                        if (collision_map_64[calcTileY() - 4][calcTileX()-1] != 1) {
-                            if (jumpTimer <= 6) posY -= 2 * yVelocity;
-                            if (jumpTimer > 6 && jumpTimer <= 14) posY -= 1 * yVelocity;
-                            if (jumpTimer == 15);
-                            if (jumpTimer == 16);
-                            if (jumpTimer > 16) posY += yVelocity;
-                        } else {
-                            posY += yVelocity;
-                            jumpTimer = 16;
-                        }
-                    }
-                    if(jumpDirection==2) {
-                        if (collision_map_64[calcTileY() - 4][calcTileX()+1] != 1) {
-                            if (jumpTimer <= 6) posY -= 2 * yVelocity;
-                            if (jumpTimer > 6 && jumpTimer <= 14) posY -= 1 * yVelocity;
-                            if (jumpTimer == 15);
-                            if (jumpTimer == 16);
-                            if (jumpTimer > 16) posY += yVelocity;
-                        } else {
-                            posY += yVelocity;
-                            jumpTimer = 16;
-                        }
-                    }
+            if (!isOnGround(collision_map_32, collision_map_64,
+                            mapWidth && collision_map_32[calcTileY()][calcTileX()] != 1)) {
+                if(calcTileY() <= 4){
+                    if (jumpTimer <= 6) posY -= 2 * yVelocity;
+                    if (jumpTimer > 6 && jumpTimer <= 14) posY -= 1 * yVelocity;
+                    if (jumpTimer == 15);
+                    if (jumpTimer == 16);
+                    if (jumpTimer > 16) posY += yVelocity;
                 }
                 else {
-                        if (jumpTimer <= 6) posY -= 2 * yVelocity;
-                        if (jumpTimer > 6 && jumpTimer <= 14) posY -= 1 * yVelocity;
-                        if (jumpTimer == 15);
-                        if (jumpTimer == 16);
-                        if (jumpTimer > 16) posY += yVelocity;
-
+                    if (jumpDirection == 0) {
+                        if (collision_map_32[calcTileY() - 3][calcTileX()] != 1) {
+                            if (jumpTimer <= 6) posY -= 2 * yVelocity;
+                            if (jumpTimer > 6 && jumpTimer <= 14) posY -= 1 * yVelocity;
+                            if (jumpTimer == 15);
+                            if (jumpTimer == 16);
+                            if (jumpTimer > 16) posY += yVelocity;
+                        } else {
+                            posY += yVelocity;
+                            jumpTimer = 16;
+                        }
+                    }
+                    if (jumpDirection == 1) {
+                        if (collision_map_32[calcTileY() - 3][calcTileX() - 1] != 1) {
+                            if (jumpTimer <= 6) posY -= 2 * yVelocity;
+                            if (jumpTimer > 6 && jumpTimer <= 14) posY -= 1 * yVelocity;
+                            if (jumpTimer == 15);
+                            if (jumpTimer == 16);
+                            if (jumpTimer > 16) posY += yVelocity;
+                        } else {
+                            posY += yVelocity;
+                            jumpTimer = 16;
+                        }
+                    }
+                    if (jumpDirection == 2) {
+                        if (collision_map_32[calcTileY() - 3][calcTileX() + 1] != 1) {
+                            if (jumpTimer <= 6) posY -= 2 * yVelocity;
+                            if (jumpTimer > 6 && jumpTimer <= 14) posY -= 1 * yVelocity;
+                            if (jumpTimer == 15);
+                            if (jumpTimer == 16);
+                            if (jumpTimer > 16) posY += yVelocity;
+                        } else {
+                            posY += yVelocity;
+                            jumpTimer = 16;
+                        }
+                    }
                 }
             }
 
         }
+    }
+    else if(mapWidth == 512) {
+        if (!isOnGround(collision_map_32, collision_map_64, mapWidth) && !pressedJump &&
+            collision_map_64[calcTileY()][calcTileX()] != 1) {
+            posY += yVelocity;
+        }
+        if (pressedJump) {
+            jumpTimer++;
+            if (!isOnGround(collision_map_32, collision_map_64,
+                            mapWidth && collision_map_64[calcTileY()][calcTileX()] != 1)) {
+                if(calcTileY() <= 4){
+                    if (jumpTimer <= 6) posY -= 2 * yVelocity;
+                    if (jumpTimer > 6 && jumpTimer <= 14) posY -= 1 * yVelocity;
+                    if (jumpTimer == 15);
+                    if (jumpTimer == 16);
+                    if (jumpTimer > 16) posY += yVelocity;
+                }
+                else {
+                    if (jumpDirection == 0) {
+                        if (collision_map_64[calcTileY() - 3][calcTileX()] != 1) {
+                            if (jumpTimer <= 6) posY -= 2 * yVelocity;
+                            if (jumpTimer > 6 && jumpTimer <= 14) posY -= 1 * yVelocity;
+                            if (jumpTimer == 15);
+                            if (jumpTimer == 16);
+                            if (jumpTimer > 16) posY += yVelocity;
+                        } else {
+                            posY += yVelocity;
+                            jumpTimer = 16;
+                        }
+                    } else if (jumpDirection == 1) {
+                        if (collision_map_64[calcTileY() - 3][calcTileX() - 1] != 1) {
+                            if (jumpTimer <= 6) posY -= 2 * yVelocity;
+                            if (jumpTimer > 6 && jumpTimer <= 14) posY -= 1 * yVelocity;
+                            if (jumpTimer == 15);
+                            if (jumpTimer == 16);
+                            if (jumpTimer > 16) posY += yVelocity;
+                        } else {
+                            posY += yVelocity;
+                            jumpTimer = 16;
+                        }
+                    } else if (jumpDirection == 2) {
+                        if (collision_map_64[calcTileY() - 3][calcTileX() + 1] != 1) {
+                            if (jumpTimer <= 6) posY -= 2 * yVelocity;
+                            if (jumpTimer > 6 && jumpTimer <= 14) posY -= 1 * yVelocity;
+                            if (jumpTimer == 15);
+                            if (jumpTimer == 16);
+                            if (jumpTimer > 16) posY += yVelocity;
+                        } else {
+                            posY += yVelocity;
+                            jumpTimer = 16;
+                        }
+                    }
+                }
+            }
+
+        }
+    }
 
 
         if (isOnGround(collision_map_32, collision_map_64, mapWidth)) {
@@ -277,9 +338,6 @@ void Player::move(bool up, bool down, bool left, bool right, int collision_map_3
             posY = posY - yVelocity;
             jump();
             playerWalkingSprite->moveTo(posX-scrollStatics, posY);
-
-
-
         }
 
         else if (left && up  && posX > 0
@@ -291,8 +349,6 @@ void Player::move(bool up, bool down, bool left, bool right, int collision_map_3
             posX = posX - xVelocity;
             posY = posY - yVelocity;
             playerWalkingSprite->moveTo(posX-scrollStatics, posY);
-
-
         }
 
         else if (right && posX < mapWidth
@@ -349,17 +405,16 @@ void Player::move(bool up, bool down, bool left, bool right, int collision_map_3
 }
 
 bool Player::fellOfMap(int collision_map_32[20][32], int collision_map_64[20][64], int mapWidth ) {
-    if(mapWidth == 256){
-        if(collision_map_32[calcTileY()][calcTileX()]==2){
-            return 1;
-        }
-        else return 0;
+    if (calcTileY() > 0) {
+        if (mapWidth == 256) {
+            if (collision_map_32[calcTileY()][calcTileX()] == 2) {
+                return 1;
+            } else return 0;
+        } else if (mapWidth == 512) {
+            if (collision_map_64[calcTileY()][calcTileX()] == 2) {
+                return 1;
+            } else return 0;
+        } else return 0;
     }
-    else if(mapWidth == 512){
-        if(collision_map_64[calcTileY()][calcTileX()]==2){
-            return 1;
-        }
-        else return 0;
-    }
-    else return 0;
+    else return 0;  
 }

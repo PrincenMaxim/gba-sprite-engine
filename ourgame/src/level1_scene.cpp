@@ -19,6 +19,7 @@
 #include "sprites/dude_sprites.h"
 #include "death_scene.h"
 #include "player.h"
+#include "temple_scene.h"
 
 
 
@@ -76,10 +77,10 @@ void level1_scene::tick(u16 keys) {
     //Scroll voor dynamic background
 
     TextStream::instance().clear();
-    TextStream::instance().setText("X: " + std::to_string(player.getPosX()),1,1);
-    TextStream::instance().setText("Y: " + std::to_string(player.getPosY()),2,1);
-    TextStream::instance().setText("Skin: " + std::to_string(player.getSkin()),3,1);
-    /*TextStream::instance().setText("TileY: " + std::to_string(player.calcTileY()),4,1);*/
+    TextStream::instance().setText("X: " + std::to_string(player.calcTileX()),1,1);
+    TextStream::instance().setText("Y: " + std::to_string(player.calcTileY()),2,1);
+    TextStream::instance().setText("Collision: " + std::to_string(player.collision(moveUp, moveDown, moveLeft, moveRight, collisionMap_level1,
+                                                                                   nullptr, mapWidth)),3,1);
     TextStream::instance().setText("Jumptimer: " + std::to_string(player.getJumpTimer()),4,1);
     TextStream::instance().setText("IsOnGround: " + std::to_string(player.isOnGround(collisionMap_level1, nullptr,mapWidth)), 5, 1);
 
@@ -109,11 +110,23 @@ void level1_scene::tick(u16 keys) {
     }
     player.isIdle(moveUp, moveDown, moveLeft, moveRight);
     player.setGravity(this->collisionMap_level1, nullptr, mapWidth, 0);
+    if(player.calcTileX() == 18 || player.calcTileX() == 19){
+        TextStream::instance().setText("PRESS A", 3,17);
+        if(keys & KEY_A){
+
+            temple_scene* templeScene = new temple_scene(engine, skin_choice);
+            engine->setScene(templeScene);
+            TextStream::instance().clear();
+            bg_dynamics->scroll(0,0);
+        }
+    }
+
     if(player.fellOfMap(this->collisionMap_level1, nullptr, mapWidth)){
         death_scene* deathScene = new death_scene(engine, skin_choice);
         engine->transitionIntoScene(deathScene,new FadeOutScene(2));
         bg_dynamics->scroll(0,0);
 
     }
+
 
 };

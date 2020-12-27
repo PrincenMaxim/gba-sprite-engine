@@ -8,9 +8,6 @@
 #include <libgba-sprite-engine/scene.h>
 #include <libgba-sprite-engine/sprites/sprite_builder.h>
 #include <libgba-sprite-engine/sprites/affine_sprite.h>
-#include <libgba-sprite-engine/scene.h>
-#include <libgba-sprite-engine/sprites/sprite_builder.h>
-#include <libgba-sprite-engine/sprites/affine_sprite.h>
 #include "Player.h"
 
 class floatingIslands_scene : public Scene {
@@ -24,7 +21,7 @@ private:
     Player player;
     SpriteBuilder<Sprite> builder;
 
-    int skin_choice = 1;
+    int skin_choice;
     int scrollX = 0;
     int timer =0;
     bool moveLeft = 0;
