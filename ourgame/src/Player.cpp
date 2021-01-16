@@ -4,7 +4,7 @@
 
 #include "Player.h"
 #include <libgba-sprite-engine/gba_engine.h>
-#include "sprites/pink_guy_coin_sprites.h"
+#include "sprites/pink_guy_sprites.h"
 #include "sprites/owlet_sprites.h"
 #include "sprites/dude_sprites.h"
 

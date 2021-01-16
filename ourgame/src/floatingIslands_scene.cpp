@@ -15,13 +15,20 @@
 #include "backgrounds/floatingIslands_input.h"
 #include <memory>
 
-#include "sprites/pink_guy_coin_sprites.h"
+#include "sprites/pink_guy_sprites.h"
 #include "sprites/owlet_sprites.h"
 #include "sprites/dude_sprites.h"
 #include "death_scene.h"
 
 std::vector<Sprite *> floatingIslands_scene::sprites(){
-    return{player.getSprite()};
+    std::vector<Sprite *> sprites;
+    for( int j =0 ; j<coinSprites.size(); j++){
+        sprites.push_back(coinSprites[j].get());
+    }
+    for(int h =0; h<player.getSprite().size(); h++){
+        sprites.push_back(player.getSprite()[h]);
+    }
+    return sprites;
 };
 
 std::vector<Background *> floatingIslands_scene::backgrounds(){
@@ -71,6 +78,7 @@ void floatingIslands_scene::load() {
     //bg_dynamics->useMapScreenBlock(14);
     //bg_3_filler->useMapScreenBlock(14);
 
+    loadCoins();
     player.setBuilder(builder,startY, skin_choice); //!!!!!!!!!!!!!!!hier nog skin_choice invullen!
 }
 void floatingIslands_scene::tick(u16 keys){
@@ -80,8 +88,8 @@ void floatingIslands_scene::tick(u16 keys){
     moveUp = keys & KEY_UP;
     moveDown = keys & KEY_DOWN;
     bPressed = keys & KEY_B;
-    TextStream::instance().setText("x_tile: " + std::to_string(player.calcTileX()),1,1);
-    TextStream::instance().setText("y_tile: " + std::to_string(player.calcTileY()),2,1);
+    TextStream::instance().setText("x_tile: " + std::to_string(player.getPosX()),1,1);
+    TextStream::instance().setText("y_tile: " + std::to_string(player.getPosY()),2,1);
     TextStream::instance().setText("jumpTimer: " + std::to_string(player.getJumpTimer()),3,1);
     TextStream::instance().setText("collision: " + std::to_string(player.collision(moveUp, moveDown, moveLeft, moveRight,
                                                                                    nullptr, collisionMap_floatingIslands, mapWidth)),4,1);
@@ -99,6 +107,7 @@ void floatingIslands_scene::tick(u16 keys){
         if(bPressed) scrollStatics += 2;
         else scrollStatics += 1;
         bg_statics.get()->scroll(scrollStatics,0);
+        scrollCoins();
 
     }
     if(player.getPosX()%1==0 && player.getPosX()>40 && keys & KEY_LEFT && scrollStatics > 0 && player.getPosX() < 200 &&
@@ -106,6 +115,7 @@ void floatingIslands_scene::tick(u16 keys){
         if(bPressed) scrollStatics -= 2;
         else scrollStatics -= 1;
         bg_statics.get()->scroll(scrollStatics,0);
+        scrollCoins();
 
     }
 
@@ -123,12 +133,57 @@ void floatingIslands_scene::tick(u16 keys){
     }
     player.isIdle(moveUp, moveDown, moveLeft, moveRight);
     player.setGravity(nullptr, this->collisionMap_floatingIslands, mapWidth, scrollStatics);
+    removeCoins();
     if(player.fellOfMap(nullptr, this->collisionMap_floatingIslands, mapWidth)){
         death_scene* deathScene = new death_scene(engine, skin_choice);
         engine->transitionIntoScene(deathScene,new FadeOutScene(1));
         bg_dynamics.get()->scroll(0, 0);
         bg_statics.get()->scroll(0,0);
 
+    }
+}
+void floatingIslands_scene::scrollCoins(){
+    for (int s = 0; s<coinSprites.size(); s++){
+        if(coinSprites[s] != nullptr) coinSprites[s].get()->moveTo(coinX[s] - scrollStatics, coinY[s]);
+
+    }
+}
+
+void floatingIslands_scene::removeCoins(){
+    for(int i=0; i<coinSprites.size(); i++){
+        if(player.getSprite()[1]->collidesWith(*coinSprites[i].get())){
+            coinY[i]=GBA_SCREEN_HEIGHT+16;
+            scrollCoins();
+        }
+
+    }
+
+}
+
+
+void floatingIslands_scene::loadCoins() {
+    for(int i = 0; i<5; i++){
+        if(skin_choice == 0){
+            coinSprites.push_back(builder.withSize(SIZE_16_16)
+                                          .withLocation(coinX[i], coinY[i])
+                                          .withData(pink_guy_coinTiles, sizeof(pink_guy_coinTiles))
+                                          .withAnimated(5, 3)
+                                          .buildPtr());
+        }
+        else if(skin_choice == 1){
+            coinSprites.push_back(builder.withSize(SIZE_16_16)
+                                          .withLocation(coinX[i], coinY[i])
+                                          .withData(owlet_coinTiles, sizeof(owlet_coinTiles))
+                                          .withAnimated(5, 3)
+                                          .buildPtr());
+        }
+        else if(skin_choice == 2) {
+            coinSprites.push_back(builder.withSize(SIZE_16_16)
+                                          .withLocation(coinX[i], coinY[i])
+                                          .withData(dude_coinTiles, sizeof(dude_coinTiles))
+                                          .withAnimated(5, 3)
+                                          .buildPtr());
+        }
     }
 }
 

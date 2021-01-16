@@ -20,6 +20,7 @@ private:
     //Sprites
     Player player;
     SpriteBuilder<Sprite> builder;
+    std::vector<std::unique_ptr<Sprite>> coinSprites;
 
     int skin_choice;
     int scrollX = 0;
@@ -32,6 +33,8 @@ private:
     int startY = 40;
     int mapWidth = 512;
     int scrollStatics = 0;
+    int coinX[5] = {100,198,316,372,400};
+    int coinY[5] = {84,108,56,108,8};
 
     int collisionMap_floatingIslands[20][64] =  {{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                                                  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1},
@@ -62,6 +65,9 @@ public:
     std::vector<Background *> backgrounds() override ;
     void load() override;
     void tick(u16 keys) override;
+    void loadCoins();
+    void scrollCoins();
+    void removeCoins();
 };
 
 

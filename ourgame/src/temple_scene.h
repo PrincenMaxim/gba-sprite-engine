@@ -8,6 +8,7 @@
 #include <libgba-sprite-engine/sprites/sprite_builder.h>
 #include <libgba-sprite-engine/sprites/affine_sprite.h>
 #include "Player.h"
+#include <vector>
 
 class temple_scene : public Scene{
 private :
@@ -19,6 +20,7 @@ private :
     //Sprites
     Player player;
     SpriteBuilder<Sprite> builder;
+    std::vector<std::unique_ptr<Sprite>> coinSprites;
 
     int skin_choice;
     int scrollX = 0;
@@ -31,6 +33,9 @@ private :
     int startY = 120;
     int mapWidth = 512;
     int scrollStatics = 0;
+    int coinX[3] = {44,160,346};
+    int coinY[3] = {40,16,48};
+
 
     int collisionMap_temple[20][64] =           {{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                                                  { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -59,6 +64,9 @@ public:
     std::vector<Background *> backgrounds() override ;
     void load() override;
     void tick(u16 keys) override;
+    void loadCoins();
+    void scrollCoins();
+    void removeCoins();
 };
 
 
