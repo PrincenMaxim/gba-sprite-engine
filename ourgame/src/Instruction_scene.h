@@ -9,7 +9,7 @@
 #include <libgba-sprite-engine/sprites/sprite_builder.h>
 #include <libgba-sprite-engine/sprites/affine_sprite.h>
 
-class instruction_scene : public Scene{
+class Instruction_scene : public Scene{
 private:
 
     std::unique_ptr<Background> bg_1;
@@ -20,7 +20,7 @@ private:
     int timer = 0;
     int skin_choice;
 public:
-    instruction_scene(std::shared_ptr<GBAEngine> engine, int skin) : Scene(engine){this->skin_choice = skin;}
+    Instruction_scene(std::shared_ptr<GBAEngine> engine, int skin) : Scene(engine){ this->skin_choice = skin;}
     std::vector<Sprite *> sprites() override ;
     std::vector<Background *> backgrounds() override ;
 

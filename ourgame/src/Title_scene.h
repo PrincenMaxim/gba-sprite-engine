@@ -10,7 +10,7 @@
 #define GBA_SPRITE_ENGINE_PROJECT_TITLE_SCENE_H
 
 
-class title_scene : public Scene{
+class Title_scene : public Scene{
 private:
     //Backgrounds
     std::unique_ptr<Background> bg_1;
@@ -20,7 +20,7 @@ private:
     int timer;
     int scrollX;
 public:
-    title_scene(std::shared_ptr<GBAEngine> engine) : Scene(engine){}
+    Title_scene(std::shared_ptr<GBAEngine> engine) : Scene(engine){}
     std::vector<Sprite *> sprites() override;
     std::vector<Background *>  backgrounds() override;
 

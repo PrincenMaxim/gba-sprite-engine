@@ -10,7 +10,7 @@
 #include <libgba-sprite-engine/sprites/affine_sprite.h>
 #include "Player.h"
 
-class floatingIslands_scene : public Scene {
+class FloatingIslands_scene : public Scene {
 private:
     //Backgrounds
     std::unique_ptr<Background> bg_statics;
@@ -30,7 +30,7 @@ private:
     bool moveDown = 0;
     bool moveUp = 0;
     bool bPressed = 0;
-    int startY = 40;
+    int startY = 96;
     int mapWidth = 512;
     int scrollStatics = 0;
     int coinX[5] = {100,198,316,372,400};
@@ -59,7 +59,7 @@ private:
 
 
 public:
-    floatingIslands_scene(std::shared_ptr<GBAEngine>engine, int skin) : Scene(engine){this->skin_choice = skin;}
+    FloatingIslands_scene(std::shared_ptr<GBAEngine>engine, int skin) : Scene(engine){ this->skin_choice = skin;}
 
     std::vector<Sprite *> sprites() override ;
     std::vector<Background *> backgrounds() override ;

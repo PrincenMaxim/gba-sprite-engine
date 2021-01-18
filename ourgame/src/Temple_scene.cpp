@@ -2,7 +2,7 @@
 // Created by Gebruiker on 23/12/2020.
 //
 
-#include "temple_scene.h"
+#include "Temple_scene.h"
 
 #include <libgba-sprite-engine/background/text_stream.h>
 #include <libgba-sprite-engine/gba/tonc_memdef.h>
@@ -14,12 +14,12 @@
 #include "sprites/pink_guy_sprites.h"
 #include "sprites/owlet_sprites.h"
 #include "sprites/dude_sprites.h"
-#include "death_scene.h"
-#include "floatingIslands_scene.h"
+#include "Death_scene.h"
+#include "FloatingIslands_scene.h"
 #include "vector"
 
 
-std::vector<Sprite *> temple_scene::sprites(){
+std::vector<Sprite *> Temple_scene::sprites(){
     std::vector<Sprite *> sprites;
     for( int j =0 ; j<coinSprites.size(); j++){
         sprites.push_back(coinSprites[j].get());
@@ -30,7 +30,7 @@ std::vector<Sprite *> temple_scene::sprites(){
     return sprites;
 };
 
-std::vector<Background *> temple_scene::backgrounds(){
+std::vector<Background *> Temple_scene::backgrounds(){
     return{
             bg_statics.get(),
             bg_dynamics.get(),
@@ -38,7 +38,52 @@ std::vector<Background *> temple_scene::backgrounds(){
     };
 }
 
-void temple_scene::load() {
+void Temple_scene::scrollCoins(){
+    for (int s = 0; s<coinSprites.size(); s++){
+        if(coinSprites[s] != nullptr) coinSprites[s].get()->moveTo(coinX[s] - scrollStatics, coinY[s]);
+
+    }
+}
+
+void Temple_scene::removeCoins(){
+    for(int i=0; i<coinSprites.size(); i++){
+        if(player.getSprite()[1]->collidesWith(*coinSprites[i].get())){
+            coinY[i]=GBA_SCREEN_HEIGHT+16;
+            scrollCoins();
+        }
+
+    }
+
+}
+
+
+void Temple_scene::loadCoins() {
+    for(int i = 0; i<3; i++){
+        if(skin_choice == 0){
+            coinSprites.push_back(builder.withSize(SIZE_16_16)
+                                          .withLocation(coinX[i], coinY[i])
+                                          .withData(pink_guy_coinTiles, sizeof(pink_guy_coinTiles))
+                                          .withAnimated(5, 3)
+                                          .buildPtr());
+        }
+        else if(skin_choice == 1){
+            coinSprites.push_back(builder.withSize(SIZE_16_16)
+                                          .withLocation(coinX[i], coinY[i])
+                                          .withData(owlet_coinTiles, sizeof(owlet_coinTiles))
+                                          .withAnimated(5, 3)
+                                          .buildPtr());
+        }
+        else if(skin_choice == 2) {
+            coinSprites.push_back(builder.withSize(SIZE_16_16)
+                                          .withLocation(coinX[i], coinY[i])
+                                          .withData(dude_coinTiles, sizeof(dude_coinTiles))
+                                          .withAnimated(5, 3)
+                                          .buildPtr());
+        }
+    }
+}
+
+void Temple_scene::load() {
     engine.get()->enableText();
 
     loadCoins();
@@ -78,28 +123,33 @@ void temple_scene::load() {
     //bg_3_filler->useMapScreenBlock(14);
 
 
-    player.setBuilder(builder, startY, skin_choice); //!!!!!!!!!!!!!!!hier nog skin_choice invullen!
+    player.setBuilder(builder, startY, skin_choice);
+    bg_statics.get()->scroll(0, 0);
+    bg_dynamics.get()->scroll(0,0);
 }
 
-void temple_scene::tick(u16 keys) {
+void Temple_scene::tick(u16 keys) {
     TextStream::instance().clear();
     moveLeft = keys & KEY_LEFT;
     moveRight = keys & KEY_RIGHT;
     moveUp = keys & KEY_UP;
     moveDown = keys & KEY_DOWN;
     bPressed = keys & KEY_B;
-    TextStream::instance().setText("x_tile: " + std::to_string(player.getPosX()), 1, 1);
+    /*TextStream::instance().setText("x_tile: " + std::to_string(player.getPosX()), 1, 1);
     TextStream::instance().setText("y_tile: " + std::to_string(player.getPosY()), 2, 1);
     TextStream::instance().setText("jumpTimer: " + std::to_string(player.getJumpTimer()), 3, 1);
     TextStream::instance().setText(
             "collision: " + std::to_string(player.collision(moveUp, moveDown, moveLeft, moveRight,
-                                                            nullptr, collisionMap_temple, mapWidth)), 4, 1);
+                                                            nullptr, collisionMap_temple, mapWidth)), 4, 1);*/
+    TextStream::instance().setText(std::to_string(engine->getTimer()->getMinutes())+":"+
+                                   std::to_string(engine->getTimer()->getSecs())+":"+
+                                   std::to_string(engine->getTimer()->getMsecs()),1,1);
 
     timer += 1;
     if (timer % 30 == 0) {
         scrollX++;
     }
-
+    bg_dynamics->scroll(scrollX,0);
     if (player.getPosX() % 1 == 0 && player.getPosX() > 40 && keys & KEY_RIGHT && scrollStatics < 270 &&
         player.collision(moveUp, moveDown, moveLeft, moveRight, nullptr, collisionMap_temple, mapWidth) == 0) {
         if (bPressed) scrollStatics += 2;
@@ -136,63 +186,17 @@ void temple_scene::tick(u16 keys) {
     removeCoins();
 
     if (player.calcTileX() == 62) {
-        floatingIslands_scene *floatingIslandsScene = new floatingIslands_scene(engine, skin_choice);
+        FloatingIslands_scene *floatingIslandsScene = new FloatingIslands_scene(engine, skin_choice);
         engine->setScene(floatingIslandsScene);
-        bg_dynamics.get()->scroll(0, 0);
-        bg_statics.get()->scroll(0, 0);
     }
 
     if (player.fellOfMap(nullptr, this->collisionMap_temple, mapWidth)) {
-        death_scene *deathScene = new death_scene(engine, skin_choice);
+        Death_scene *deathScene = new Death_scene(engine, skin_choice);
 
         engine->transitionIntoScene(deathScene, new FadeOutScene(2));
-        bg_dynamics.get()->scroll(0, 0);
-        bg_statics.get()->scroll(0, 0);
+
 
     }
 }
 
-void temple_scene::scrollCoins(){
-    for (int s = 0; s<coinSprites.size(); s++){
-        if(coinSprites[s] != nullptr) coinSprites[s].get()->moveTo(coinX[s] - scrollStatics, coinY[s]);
 
-    }
-}
-
-void temple_scene::removeCoins(){
-    for(int i=0; i<coinSprites.size(); i++){
-        if(player.getSprite()[1]->collidesWith(*coinSprites[i].get())){
-            coinY[i]=GBA_SCREEN_HEIGHT+16;
-            scrollCoins();
-        }
-
-    }
-
-}
-
-
-void temple_scene::loadCoins() {
-        for(int i = 0; i<3; i++){
-            if(skin_choice == 0){
-                coinSprites.push_back(builder.withSize(SIZE_16_16)
-                                              .withLocation(coinX[i], coinY[i])
-                                              .withData(pink_guy_coinTiles, sizeof(pink_guy_coinTiles))
-                                              .withAnimated(5, 3)
-                                              .buildPtr());
-            }
-            else if(skin_choice == 1){
-                coinSprites.push_back(builder.withSize(SIZE_16_16)
-                                              .withLocation(coinX[i], coinY[i])
-                                              .withData(owlet_coinTiles, sizeof(owlet_coinTiles))
-                                              .withAnimated(5, 3)
-                                              .buildPtr());
-            }
-            else if(skin_choice == 2) {
-                coinSprites.push_back(builder.withSize(SIZE_16_16)
-                                              .withLocation(coinX[i], coinY[i])
-                                              .withData(dude_coinTiles, sizeof(dude_coinTiles))
-                                              .withAnimated(5, 3)
-                                              .buildPtr());
-            }
-        }
-}

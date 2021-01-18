@@ -2,7 +2,7 @@
 // Created by Gebruiker on 19/12/2020.
 //
 
-#include "level0_scene.h"
+#include "Character_selection_scene.h"
 #include <libgba-sprite-engine/background/text_stream.h>
 #include <libgba-sprite-engine/gba/tonc_memdef.h>
 #include <libgba-sprite-engine/gba_engine.h>
@@ -10,9 +10,10 @@
 #include "backgrounds/level0_input.h"
 #include "sprites/lvl0_sprites.h"
 #include "sounds/choose_your_character.h"
-#include "instruction_scene.h"
+#include "Instruction_scene.h"
+#include <libgba-sprite-engine/timer.h>
 
-std::vector<Sprite *> level0_scene::sprites(){
+std::vector<Sprite *> Character_selection_scene::sprites(){
     std::vector<Sprite*> sprites;
 
     sprites.push_back(arrowSprite.get());
@@ -23,7 +24,7 @@ std::vector<Sprite *> level0_scene::sprites(){
 
 };
 
-std::vector<Background *> level0_scene::backgrounds() {
+std::vector<Background *> Character_selection_scene::backgrounds() {
     return {
         bg_1.get(),
         bg_2.get(),
@@ -31,7 +32,7 @@ std::vector<Background *> level0_scene::backgrounds() {
     };
 };
 
-void level0_scene::load(){
+void Character_selection_scene::load(){
     engine.get()->enableText();
 
     TextStream::instance().clear();
@@ -81,9 +82,11 @@ void level0_scene::load(){
             .buildPtr();
 
     engine->enqueueSound(chooseyourcharacter, sizeof(chooseyourcharacter), 98000);
+    bg_1->scroll(0,0);
+    bg_2.get()->scroll(0,0);
 };
 
-void level0_scene::tick(u16 keys) {
+void Character_selection_scene::tick(u16 keys) {
     timer ++;
     if(scene_timer != 0) scene_timer ++;
     if(scene_timer == 15) scene_timer = 0;
@@ -111,9 +114,8 @@ void level0_scene::tick(u16 keys) {
         if(arrowSprite->getX() == 64) skin_choice = 0; //pink guy
         else if(arrowSprite->getX() == 112) skin_choice = 1; //owlet
         else if(arrowSprite->getX() == 160) skin_choice = 2; //dude
-        instruction_scene* instructionScene = new instruction_scene(engine, skin_choice);
+        Instruction_scene* instructionScene = new Instruction_scene(engine, skin_choice);
         engine->transitionIntoScene(instructionScene,new FadeOutScene(2));
-        bg_2.get()->scroll(0,0);
     }
 
 

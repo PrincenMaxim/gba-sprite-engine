@@ -2,15 +2,15 @@
 // Created by Gebruiker on 19/12/2020.
 //
 
-#ifndef GBA_SPRITE_ENGINE_PROJECT_LEVEL0_SCENE_H
-#define GBA_SPRITE_ENGINE_PROJECT_LEVEL0_SCENE_H
+#ifndef GBA_SPRITE_ENGINE_PROJECT_CHARACTER_SELECTION_SCENE_H
+#define GBA_SPRITE_ENGINE_PROJECT_CHARACTER_SELECTION_SCENE_H
 
 #include <libgba-sprite-engine/scene.h>
 #include <libgba-sprite-engine/sprites/sprite_builder.h>
 #include <libgba-sprite-engine/sprites/affine_sprite.h>
 
 
-class level0_scene : public Scene {
+class Character_selection_scene : public Scene {
 private:
     //Sprites
     SpriteBuilder<Sprite> builder;
@@ -29,7 +29,7 @@ private:
     int scrollX = 0;
     int timer = 0;
 public:
-    level0_scene(std::shared_ptr<GBAEngine> engine) : Scene(engine){}
+    Character_selection_scene(std::shared_ptr<GBAEngine> engine) : Scene(engine){}
     std::vector<Sprite *> sprites() override ;
     std::vector<Background *> backgrounds() override ;
 
@@ -39,4 +39,4 @@ public:
 };
 
 
-#endif //GBA_SPRITE_ENGINE_PROJECT_LEVEL0_SCENE_H
+#endif //GBA_SPRITE_ENGINE_PROJECT_CHARACTER_SELECTION_SCENE_H

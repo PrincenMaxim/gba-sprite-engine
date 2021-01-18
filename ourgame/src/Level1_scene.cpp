@@ -10,24 +10,24 @@
 #include <libgba-sprite-engine/gba_engine.h>
 #include <libgba-sprite-engine/effects/fade_out_scene.h>
 
-#include "level1_scene.h"
+#include "Level1_scene.h"
 #include "backgrounds/level1_input.h"
 #include <memory>
 
 #include "sprites/pink_guy_sprites.h"
 #include "sprites/owlet_sprites.h"
 #include "sprites/dude_sprites.h"
-#include "death_scene.h"
+#include "Death_scene.h"
 #include "player.h"
-#include "temple_scene.h"
+#include "Temple_scene.h"
 
 
 
-std::vector<Sprite *> level1_scene::sprites(){
+std::vector<Sprite *> Level1_scene::sprites(){
     return{player.getSprite()};
 };
 
-std::vector<Background *> level1_scene::backgrounds() {
+std::vector<Background *> Level1_scene::backgrounds() {
     return {
             bg_statics.get(),
             bg_dynamics.get(),
@@ -36,7 +36,7 @@ std::vector<Background *> level1_scene::backgrounds() {
 }
 
 
-void level1_scene::load(){
+void Level1_scene::load(){
     engine.get()->enableText();
 
     switch(skin_choice){
@@ -69,21 +69,25 @@ void level1_scene::load(){
     //bg_3_filler->useMapScreenBlock(14);
 
     player.setBuilder(builder,startY, skin_choice);
-
+    engine->getTimer()->start();
+    bg_statics->scroll(0,0);
+    bg_dynamics.get()->scroll(0,0);
 
     };
 
-void level1_scene::tick(u16 keys) {
+void Level1_scene::tick(u16 keys) {
     //Scroll voor dynamic background
 
     TextStream::instance().clear();
-    TextStream::instance().setText("X: " + std::to_string(player.calcTileX()),1,1);
+    /*TextStream::instance().setText("X: " + std::to_string(player.calcTileX()),1,1);
     TextStream::instance().setText("Y: " + std::to_string(player.calcTileY()),2,1);
     TextStream::instance().setText("Collision: " + std::to_string(player.collision(moveUp, moveDown, moveLeft, moveRight, collisionMap_level1,
                                                                                    nullptr, mapWidth)),3,1);
     TextStream::instance().setText("Jumptimer: " + std::to_string(player.getJumpTimer()),4,1);
-    TextStream::instance().setText("IsOnGround: " + std::to_string(player.isOnGround(collisionMap_level1, nullptr,mapWidth)), 5, 1);
-
+    TextStream::instance().setText("IsOnGround: " + std::to_string(player.isOnGround(collisionMap_level1, nullptr,mapWidth)), 5, 1);*/
+    TextStream::instance().setText(std::to_string(engine->getTimer()->getMinutes())+":"+
+                                    std::to_string(engine->getTimer()->getSecs())+":"+
+                                    std::to_string(engine->getTimer()->getMsecs()),1,1);
     TextStream::instance().setFontColor(BLD_WHITE);
     timer += 1;
     if (timer % 30 == 0) {
@@ -114,7 +118,7 @@ void level1_scene::tick(u16 keys) {
         TextStream::instance().setText("PRESS A", 3,17);
         if(keys & KEY_A){
 
-            temple_scene* templeScene = new temple_scene(engine, skin_choice);
+            Temple_scene* templeScene = new Temple_scene(engine, skin_choice);
             engine->setScene(templeScene);
             TextStream::instance().clear();
             bg_dynamics->scroll(0,0);
@@ -122,9 +126,9 @@ void level1_scene::tick(u16 keys) {
     }
 
     if(player.fellOfMap(this->collisionMap_level1, nullptr, mapWidth)){
-        death_scene* deathScene = new death_scene(engine, skin_choice);
+        Death_scene* deathScene = new Death_scene(engine, skin_choice);
         engine->transitionIntoScene(deathScene,new FadeOutScene(2));
-        bg_dynamics->scroll(0,0);
+
 
     }
 

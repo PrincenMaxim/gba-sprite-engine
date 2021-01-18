@@ -5,26 +5,34 @@
 #include <libgba-sprite-engine/palette/palette_manager.h>
 #include <libgba-sprite-engine/allocator.h>
 
-#include "level1_scene.h"
-#include "level0_scene.h"
-#include "title_scene.h"
-#include "floatingIslands_scene.h"
-#include "temple_scene.h"
+#include "Level1_scene.h"
+#include "Character_selection_scene.h"
+#include "Title_scene.h"
+#include "FloatingIslands_scene.h"
+#include "Temple_scene.h"
+#include "Instruction_scene.h"
+
+int skinselector;
 
 int main() {
     std::shared_ptr<GBAEngine> engine(new GBAEngine());
 
-    title_scene* titleScene = new title_scene(engine);
+    Title_scene* titleScene = new Title_scene(engine);
     engine->setScene(titleScene);
 
-    //level1_scene* level1Scene = new level1_scene(engine,0);
+    //Instruction_scene* instructionScene = new Instruction_scene(engine, 2);
+    //engine->setScene(instructionScene);
+
+    //Level1_scene* level1Scene = new Level1_scene(engine,0);
     //engine->setScene(level1Scene);
 
-    //temple_scene* templeScene = new temple_scene(engine,2);
+    //Temple_scene* templeScene = new Temple_scene(engine,2);
     //engine->setScene(templeScene);
 
-    //floatingIslands_scene* floatingIslandsScene = new floatingIslands_scene(engine, 2);
+    //FloatingIslands_scene* floatingIslandsScene = new FloatingIslands_scene(engine, 2);
     //engine->setScene(floatingIslandsScene);
+
+
 
     while (true) {
         engine->update();

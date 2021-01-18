@@ -11,7 +11,7 @@
 #include "Player.h"
 #include <cmath>
 
-class level1_scene : public Scene {
+class Level1_scene : public Scene {
 private:
     //Backgrounds
     std::unique_ptr<Background> bg_statics;
@@ -83,7 +83,7 @@ private:
     SpriteBuilder<Sprite> builder;
 
 public:
-    level1_scene(std::shared_ptr<GBAEngine> engine, int skin) : Scene(engine){this->skin_choice=skin;}
+    Level1_scene(std::shared_ptr<GBAEngine> engine, int skin) : Scene(engine){ this->skin_choice=skin;}
 
     std::vector<Sprite *> sprites() override ;
     std::vector<Background *> backgrounds() override ;

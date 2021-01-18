@@ -6,26 +6,26 @@
 #include <libgba-sprite-engine/gba/tonc_memdef.h>
 #include <libgba-sprite-engine/gba_engine.h>
 #include <libgba-sprite-engine/effects/fade_out_scene.h>
-#include "death_scene.h"
+#include "Death_scene.h"
 #include "sprites/death_sprites.h"
 #include "backgrounds/level0_input.h"
 #include <libgba-sprite-engine/gba/tonc_types.h>
-#include "level1_scene.h"
-#include "title_scene.h"
+#include "Level1_scene.h"
+#include "Title_scene.h"
 
 
 
-std::vector<Sprite *> death_scene::sprites(){
+std::vector<Sprite *> Death_scene::sprites(){
     return {arrowSprite.get()};
 }
 
-std::vector<Background *> death_scene::backgrounds(){
+std::vector<Background *> Death_scene::backgrounds(){
     return{bg_1.get()};
 }
 
-void death_scene::load(){
+void Death_scene::load(){
     engine.get()->enableText();
-
+    engine->getTimer()->reset();
     TextStream::instance().clear();
 
     TextStream::instance().setText(" YOU DIED!  ", 4,9);
@@ -45,10 +45,11 @@ void death_scene::load(){
             .withinBounds()
             .buildPtr();
     arrowSprite->makeAnimated(0,4,6);
+
+    bg_1.get()->scroll(0,0);
 }
-void death_scene::tick(u16 keys){
+void Death_scene::tick(u16 keys){
     TextStream::instance().setFontColor(BLD_BG0);
-    TextStream::instance().setText("x: " + std::to_string(arrowSprite->getX()),1,1);
 
     if(scene_timer != 0) scene_timer ++;
     if(scene_timer == 15) scene_timer = 0;
@@ -68,14 +69,12 @@ void death_scene::tick(u16 keys){
     }
     if(keys & KEY_A){
         if(arrowSprite->getX() == 84) {
-            level1_scene* level1Scene = new level1_scene(engine, skin_choice);
+            Level1_scene* level1Scene = new Level1_scene(engine, skin_choice);
             engine->transitionIntoScene(level1Scene, new FadeOutScene(2));
-            bg_1->scroll(0,0);
         }
         else if(arrowSprite->getX() == 128){
-            title_scene* titleScene = new title_scene(engine);
+            Title_scene* titleScene = new Title_scene(engine);
             engine->transitionIntoScene(titleScene, new FadeOutScene(2));
-            bg_1->scroll(0,0);
         }
     }
 }

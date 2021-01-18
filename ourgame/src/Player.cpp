@@ -89,7 +89,7 @@ void Player::calcJumpDirection(bool up, bool left, bool right) {
 }
 
 int Player::collision(bool up, bool down, bool left, bool right, int collision_map_32[20][32], int collision_map_64[20][64], int mapWidth) {
-    if(calcTileX()>0) {
+    if(calcTileX()>=0) {
         if (mapWidth == 256) {
             if(!isOnGround(collision_map_32, collision_map_64, mapWidth)){
                 if(calcTileY()>=0){
