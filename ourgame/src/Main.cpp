@@ -5,14 +5,14 @@
 #include <libgba-sprite-engine/palette/palette_manager.h>
 #include <libgba-sprite-engine/allocator.h>
 
-#include "Level1_scene.h"
-#include "Character_selection_scene.h"
-#include "Title_scene.h"
-#include "FloatingIslands_scene.h"
-#include "Temple_scene.h"
-#include "Instruction_scene.h"
+#include "scenes/Level1_scene.h"
+#include "scenes/Character_selection_scene.h"
+#include "scenes/Title_scene.h"
+#include "scenes/FloatingIslands_scene.h"
+#include "scenes/Temple_scene.h"
+#include "scenes/Instruction_scene.h"
 #include "TempSave.h"
-#include "Victory_scene.h"
+#include "scenes/Victory_scene.h"
 
 int skinselector;
 

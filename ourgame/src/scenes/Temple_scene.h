@@ -7,8 +7,8 @@
 #include <libgba-sprite-engine/scene.h>
 #include <libgba-sprite-engine/sprites/sprite_builder.h>
 #include <libgba-sprite-engine/sprites/affine_sprite.h>
-#include "Player.h"
-#include "TempSave.h"
+#include "../Player.h"
+#include "../TempSave.h"
 #include <vector>
 #include <libgba-sprite-engine/background/text_stream.h>
 #include <memory>

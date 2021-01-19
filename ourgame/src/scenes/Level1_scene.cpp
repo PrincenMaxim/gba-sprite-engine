@@ -4,10 +4,10 @@
 
 #include "Level1_scene.h"
 
-#include "backgrounds/level1_input.h"
-#include "sprites/pink_guy_sprites.h"
-#include "sprites/owlet_sprites.h"
-#include "sprites/dude_sprites.h"
+#include "../backgrounds/level1_input.h"
+#include "../sprites/pink_guy_sprites.h"
+#include "../sprites/owlet_sprites.h"
+#include "../sprites/dude_sprites.h"
 #include "Death_scene.h"
 
 

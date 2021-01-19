@@ -3,11 +3,11 @@
 //
 
 #include "FloatingIslands_scene.h"
-#include "sounds/coinsound.h"
-#include "sprites/pink_guy_sprites.h"
-#include "sprites/owlet_sprites.h"
-#include "sprites/dude_sprites.h"
-#include "backgrounds/floatingIslands_input.h"
+#include "../sounds/coinsound.h"
+#include "../sprites/pink_guy_sprites.h"
+#include "../sprites/owlet_sprites.h"
+#include "../sprites/dude_sprites.h"
+#include "../backgrounds/floatingIslands_input.h"
 
 std::vector<Sprite *> FloatingIslands_scene::sprites(){
     std::vector<Sprite *> sprites;

@@ -4,8 +4,8 @@
 
 
 #include "Death_scene.h"
-#include "sprites/death_sprites.h"
-#include "backgrounds/character_selection_input.h"
+#include "../sprites/death_sprites.h"
+#include "../backgrounds/character_selection_input.h"
 
 
 

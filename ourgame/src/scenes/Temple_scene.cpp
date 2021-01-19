@@ -5,11 +5,11 @@
 #include "Temple_scene.h"
 
 
-#include "backgrounds/temple_input.h"
-#include "sprites/pink_guy_sprites.h"
-#include "sprites/owlet_sprites.h"
-#include "sprites/dude_sprites.h"
-#include "sounds/coinsound.h"
+#include "../backgrounds/temple_input.h"
+#include "../sprites/pink_guy_sprites.h"
+#include "../sprites/owlet_sprites.h"
+#include "../sprites/dude_sprites.h"
+#include "../sounds/coinsound.h"
 
 
 std::vector<Sprite *> Temple_scene::sprites(){

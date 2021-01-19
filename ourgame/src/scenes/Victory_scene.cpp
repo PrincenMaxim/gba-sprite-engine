@@ -3,7 +3,7 @@
 //
 
 #include "Victory_scene.h"
-#include "backgrounds/character_selection_input.h"
+#include "../backgrounds/character_selection_input.h"
 
 
 std::vector<Sprite *> Victory_scene::sprites(){

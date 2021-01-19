@@ -5,9 +5,9 @@
 #include "Character_selection_scene.h"
 
 
-#include "backgrounds/character_selection_input.h"
-#include "sprites/lvl0_sprites.h"
-#include "sounds/choose_your_character.h"
+#include "../backgrounds/character_selection_input.h"
+#include "../sprites/lvl0_sprites.h"
+#include "../sounds/choose_your_character.h"
 
 
 std::vector<Sprite *> Character_selection_scene::sprites(){

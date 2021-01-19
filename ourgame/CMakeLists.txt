@@ -5,34 +5,34 @@ set(CMAKE_CXX_STANDARD 14)
 
 add_executable(ourgame.elf
         src/Main.cpp
-        src/Level1_scene.cpp
-        src/Level1_scene.h
+        src/scenes/Level1_scene.cpp
+        src/scenes/Level1_scene.h
         src/backgrounds/level1_input.h
         src/Player.cpp src/Player.h
         src/sprites/pink_guy_sprites.h
         src/backgrounds/character_selection_input.h
-        src/Character_selection_scene.cpp
-        src/Character_selection_scene.h
+        src/scenes/Character_selection_scene.cpp
+        src/scenes/Character_selection_scene.h
         src/sprites/lvl0_sprites.h
         src/sounds/choose_your_character.h
         src/sprites/owlet_sprites.h
         src/sprites/dude_sprites.h
-        src/Title_scene.cpp
-        src/Title_scene.h
+        src/scenes/Title_scene.cpp
+        src/scenes/Title_scene.h
         src/backgrounds/title_input.h
-        src/Death_scene.cpp
-        src/Death_scene.h
+        src/scenes/Death_scene.cpp
+        src/scenes/Death_scene.h
         src/sprites/death_sprites.h
         src/backgrounds/death_input.h
-        src/Instruction_scene.cpp
-        src/Instruction_scene.h
+        src/scenes/Instruction_scene.cpp
+        src/scenes/Instruction_scene.h
         src/backgrounds/instruction_input.h
-        src/FloatingIslands_scene.cpp
-        src/FloatingIslands_scene.h
+        src/scenes/FloatingIslands_scene.cpp
+        src/scenes/FloatingIslands_scene.h
         src/backgrounds/floatingIslands_input.h
-        src/Temple_scene.cpp src/Temple_scene.h
+        src/scenes/Temple_scene.cpp src/scenes/Temple_scene.h
         src/backgrounds/temple_input.h
-        src/TempSave.cpp src/TempSave.h src/Victory_scene.cpp src/Victory_scene.h)
+        src/TempSave.cpp src/TempSave.h src/scenes/Victory_scene.cpp src/scenes/Victory_scene.h)
 
 
 target_link_libraries(${PROJECT_NAME}.elf gba-sprite-engine)

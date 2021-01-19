@@ -6,7 +6,7 @@
 #define GBA_SPRITE_ENGINE_PROJECT_VICTORY_SCENE_H
 
 #include <libgba-sprite-engine/scene.h>
-#include "TempSave.h"
+#include "../TempSave.h"
 #include "Title_scene.h"
 #include <cmath>
 

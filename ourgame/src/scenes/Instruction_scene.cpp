@@ -4,7 +4,7 @@
 
 #include "Instruction_scene.h"
 
-#include "backgrounds/instruction_input.h"
+#include "../backgrounds/instruction_input.h"
 
 std::vector<Sprite *> Instruction_scene::sprites(){
     return {};
