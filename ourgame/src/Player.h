@@ -8,6 +8,7 @@
 #include <cmath>
 #include <libgba-sprite-engine/scene.h>
 #include <libgba-sprite-engine/sprites/sprite_builder.h>
+#include <libgba-sprite-engine/gba_engine.h>
 
 class Player {
 private:

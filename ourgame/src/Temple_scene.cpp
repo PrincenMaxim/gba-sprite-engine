@@ -4,19 +4,12 @@
 
 #include "Temple_scene.h"
 
-#include <libgba-sprite-engine/background/text_stream.h>
-#include <libgba-sprite-engine/gba/tonc_memdef.h>
-#include <libgba-sprite-engine/gba_engine.h>
-#include <memory>
-#include <libgba-sprite-engine/effects/fade_out_scene.h>
 
 #include "backgrounds/temple_input.h"
 #include "sprites/pink_guy_sprites.h"
 #include "sprites/owlet_sprites.h"
 #include "sprites/dude_sprites.h"
-#include "Death_scene.h"
-#include "FloatingIslands_scene.h"
-#include "vector"
+#include "sounds/coinsound.h"
 
 
 std::vector<Sprite *> Temple_scene::sprites(){
@@ -48,10 +41,12 @@ void Temple_scene::scrollCoins(){
 void Temple_scene::removeCoins(){
     for(int i=0; i<coinSprites.size(); i++){
         if(player.getSprite()[1]->collidesWith(*coinSprites[i].get()) || player.getSprite()[0]->collidesWith(*coinSprites[i].get())){
-
+            engine->dequeueAllSounds();
             coinY[i]=GBA_SCREEN_HEIGHT+16;
             collectedCoins++;
             scrollCoins();
+            engine->enqueueSound(coinsound, sizeof(coinsound), 98000);
+
         }
 
     }

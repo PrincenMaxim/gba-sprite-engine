@@ -10,6 +10,14 @@
 #include <libgba-sprite-engine/sprites/affine_sprite.h>
 #include "Player.h"
 #include "TempSave.h"
+#include <libgba-sprite-engine/background/text_stream.h>
+#include <libgba-sprite-engine/gba/tonc_memdef.h>
+#include <libgba-sprite-engine/gba_engine.h>
+#include <libgba-sprite-engine/effects/fade_out_scene.h>
+#include <memory>
+#include "Death_scene.h"
+#include "Victory_scene.h"
+
 
 class FloatingIslands_scene : public Scene {
 private:

@@ -3,23 +3,11 @@
 //
 
 #include "FloatingIslands_scene.h"
-
-#include <libgba-sprite-engine/sprites/affine_sprite.h>
-#include <libgba-sprite-engine/sprites/sprite_builder.h>
-
-#include <libgba-sprite-engine/background/text_stream.h>
-#include <libgba-sprite-engine/gba/tonc_memdef.h>
-#include <libgba-sprite-engine/gba_engine.h>
-#include <libgba-sprite-engine/effects/fade_out_scene.h>
-
-#include "backgrounds/floatingIslands_input.h"
-#include <memory>
-
+#include "sounds/coinsound.h"
 #include "sprites/pink_guy_sprites.h"
 #include "sprites/owlet_sprites.h"
 #include "sprites/dude_sprites.h"
-#include "Death_scene.h"
-#include "Victory_scene.h"
+#include "backgrounds/floatingIslands_input.h"
 
 std::vector<Sprite *> FloatingIslands_scene::sprites(){
     std::vector<Sprite *> sprites;
@@ -53,6 +41,7 @@ void FloatingIslands_scene::removeCoins(){
             coinY[i]=GBA_SCREEN_HEIGHT+16;
             collectedCoins++;
             scrollCoins();
+            engine->enqueueSound(coinsound, sizeof(coinsound), 98000);
         }
 
     }
@@ -89,8 +78,6 @@ void FloatingIslands_scene::loadCoins() {
 void FloatingIslands_scene::load() {
     engine.get()->enableText();
 
-
-
     switch (skin_choice) {
         case 0 :
             foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(
@@ -120,10 +107,7 @@ void FloatingIslands_scene::load() {
     bg_3_filler = std::unique_ptr<Background>(new Background(3, floatingIslands_cloudsTiles, sizeof(floatingIslands_cloudsTiles),
                            floatingIslands_clouds_map, sizeof(floatingIslands_clouds_map),
                            14, 3, MAPLAYOUT_32X32));
-    //is hetzelfde als
-    //bg_statics->useMapScreenBlock(18);
-    //bg_dynamics->useMapScreenBlock(14);
-    //bg_3_filler->useMapScreenBlock(14);
+
     bg_statics->scroll(0,0);
     bg_dynamics.get()->scroll(0,0);
 
@@ -137,11 +121,6 @@ void FloatingIslands_scene::tick(u16 keys){
     moveUp = keys & KEY_UP;
     moveDown = keys & KEY_DOWN;
     bPressed = keys & KEY_B;
-    /*TextStream::instance().setText("x_tile: " + std::to_string(player.getPosX()),1,1);
-    TextStream::instance().setText("y_tile: " + std::to_string(player.getPosY()),2,1);
-    TextStream::instance().setText("jumpTimer: " + std::to_string(player.getJumpTimer()),3,1);
-    TextStream::instance().setText("collision: " + std::to_string(player.collision(moveUp, moveDown, moveLeft, moveRight,
-                                                                                   nullptr, collisionMap_floatingIslands, mapWidth)),4,1);*/
 
     if(player.getPosX() <= 499) TextStream::instance().setText(std::to_string(engine->getTimer()->getMinutes())+":"+
                                    std::to_string(engine->getTimer()->getSecs())+":"+
@@ -178,7 +157,7 @@ void FloatingIslands_scene::tick(u16 keys){
     if(bPressed){
         player.move(moveUp, moveDown, moveLeft, moveRight, nullptr, this->collisionMap_floatingIslands, bPressed, mapWidth, scrollStatics);
     }
-        //walking
+    //walking
     else {
         if (timer % 2 == 0) {
             player.move(moveUp, moveDown, moveLeft, moveRight, nullptr, this->collisionMap_floatingIslands, bPressed, mapWidth, scrollStatics);

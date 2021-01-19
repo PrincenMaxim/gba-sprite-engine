@@ -2,24 +2,14 @@
 // Created by Maxim on 15/12/2020.
 //
 
-#include <libgba-sprite-engine/sprites/affine_sprite.h>
-#include <libgba-sprite-engine/sprites/sprite_builder.h>
-
-#include <libgba-sprite-engine/background/text_stream.h>
-#include <libgba-sprite-engine/gba/tonc_memdef.h>
-#include <libgba-sprite-engine/gba_engine.h>
-#include <libgba-sprite-engine/effects/fade_out_scene.h>
-
 #include "Level1_scene.h"
-#include "backgrounds/level1_input.h"
-#include <memory>
 
+#include "backgrounds/level1_input.h"
 #include "sprites/pink_guy_sprites.h"
 #include "sprites/owlet_sprites.h"
 #include "sprites/dude_sprites.h"
 #include "Death_scene.h"
-#include "player.h"
-#include "Temple_scene.h"
+
 
 
 

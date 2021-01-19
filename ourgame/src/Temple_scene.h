@@ -10,6 +10,12 @@
 #include "Player.h"
 #include "TempSave.h"
 #include <vector>
+#include <libgba-sprite-engine/background/text_stream.h>
+#include <memory>
+#include <libgba-sprite-engine/effects/fade_out_scene.h>
+#include "Death_scene.h"
+#include "FloatingIslands_scene.h"
+#include "vector"
 
 class Temple_scene : public Scene{
 private :

@@ -2,16 +2,10 @@
 // Created by Gebruiker on 20/12/2020.
 //
 
-#include <libgba-sprite-engine/background/text_stream.h>
-#include <libgba-sprite-engine/gba/tonc_memdef.h>
-#include <libgba-sprite-engine/gba_engine.h>
-#include <libgba-sprite-engine/effects/fade_out_scene.h>
+
 #include "Death_scene.h"
 #include "sprites/death_sprites.h"
 #include "backgrounds/character_selection_input.h"
-#include <libgba-sprite-engine/gba/tonc_types.h>
-#include "Level1_scene.h"
-#include "Title_scene.h"
 
 
 

@@ -3,15 +3,12 @@
 //
 
 #include "Character_selection_scene.h"
-#include <libgba-sprite-engine/background/text_stream.h>
-#include <libgba-sprite-engine/gba/tonc_memdef.h>
-#include <libgba-sprite-engine/gba_engine.h>
-#include <libgba-sprite-engine/effects/fade_out_scene.h>
+
+
 #include "backgrounds/character_selection_input.h"
 #include "sprites/lvl0_sprites.h"
 #include "sounds/choose_your_character.h"
-#include "Instruction_scene.h"
-#include <libgba-sprite-engine/timer.h>
+
 
 std::vector<Sprite *> Character_selection_scene::sprites(){
     std::vector<Sprite*> sprites;
@@ -117,6 +114,4 @@ void Character_selection_scene::tick(u16 keys) {
         Instruction_scene* instructionScene = new Instruction_scene(engine, save);
         engine->transitionIntoScene(instructionScene,new FadeOutScene(2));
     }
-
-
 };

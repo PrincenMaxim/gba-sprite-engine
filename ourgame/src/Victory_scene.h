@@ -7,6 +7,9 @@
 
 #include <libgba-sprite-engine/scene.h>
 #include "TempSave.h"
+#include "Title_scene.h"
+#include <cmath>
+
 
 class Victory_scene  : public Scene{
 private:
@@ -14,12 +17,15 @@ private:
     std::unique_ptr<Background> bg_1;
     int timer = 0;
     int scrollX = 0;
+    int score = 0;
 public:
     Victory_scene(std::shared_ptr<GBAEngine>engine, std::shared_ptr<TempSave> tempSave) : Scene(engine){ this->save = tempSave;}
     std::vector<Sprite *> sprites() override ;
     std::vector<Background *> backgrounds() override ;
     void load() override;
     void tick(u16 keys) override;
+    void calcScore();
+    void calcBestScore();
 };
 
 

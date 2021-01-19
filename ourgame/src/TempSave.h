@@ -11,6 +11,7 @@ private:
     int skin;
     int coins_temple = 0;
     int coins_islands = 0;
+    int bestScore;
 public:
     void setSkin(int i){this->skin = i;}
     int getSkin(){return this->skin;}
@@ -18,6 +19,8 @@ public:
     void setCoinsIslands(int i){this->coins_islands = i;}
     int getCoins(){return (this->coins_islands + this->coins_temple);}
     void resetCoins(){this->coins_temple = 0; this->coins_islands = 0;}
+    int getBestScore(){return this->bestScore;}
+    void setBestScore(int score){this->bestScore = score;}
 };
 
 

@@ -4,12 +4,8 @@
 
 #include "Title_scene.h"
 #include "backgrounds/title_input.h"
-#include <libgba-sprite-engine/effects/fade_out_scene.h>
-#include <libgba-sprite-engine/background/text_stream.h>
-#include <libgba-sprite-engine/gba_engine.h>
-#include <libgba-sprite-engine/gba/tonc_memdef.h>
-#include "Character_selection_scene.h"
-#include "fstream"
+
+
 
 std::vector<Sprite *> Title_scene::sprites() {
     return{};
