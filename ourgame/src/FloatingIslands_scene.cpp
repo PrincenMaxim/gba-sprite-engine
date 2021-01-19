@@ -19,6 +19,7 @@
 #include "sprites/owlet_sprites.h"
 #include "sprites/dude_sprites.h"
 #include "Death_scene.h"
+#include "Victory_scene.h"
 
 std::vector<Sprite *> FloatingIslands_scene::sprites(){
     std::vector<Sprite *> sprites;
@@ -48,8 +49,9 @@ void FloatingIslands_scene::scrollCoins(){
 
 void FloatingIslands_scene::removeCoins(){
     for(int i=0; i<coinSprites.size(); i++){
-        if(player.getSprite()[1]->collidesWith(*coinSprites[i].get())){
+        if(player.getSprite()[1]->collidesWith(*coinSprites[i].get())|| player.getSprite()[0]->collidesWith(*coinSprites[i].get())){
             coinY[i]=GBA_SCREEN_HEIGHT+16;
+            collectedCoins++;
             scrollCoins();
         }
 
@@ -140,7 +142,8 @@ void FloatingIslands_scene::tick(u16 keys){
     TextStream::instance().setText("jumpTimer: " + std::to_string(player.getJumpTimer()),3,1);
     TextStream::instance().setText("collision: " + std::to_string(player.collision(moveUp, moveDown, moveLeft, moveRight,
                                                                                    nullptr, collisionMap_floatingIslands, mapWidth)),4,1);*/
-    TextStream::instance().setText(std::to_string(engine->getTimer()->getMinutes())+":"+
+
+    if(player.getPosX() <= 499) TextStream::instance().setText(std::to_string(engine->getTimer()->getMinutes())+":"+
                                    std::to_string(engine->getTimer()->getSecs())+":"+
                                    std::to_string(engine->getTimer()->getMsecs()),1,1);
     TextStream::instance().setFontColor(BLD_BG0);
@@ -185,8 +188,15 @@ void FloatingIslands_scene::tick(u16 keys){
     player.setGravity(nullptr, this->collisionMap_floatingIslands, mapWidth, scrollStatics);
     removeCoins();
     if(player.fellOfMap(nullptr, this->collisionMap_floatingIslands, mapWidth)){
-        Death_scene* deathScene = new Death_scene(engine, skin_choice);
-        engine->transitionIntoScene(deathScene,new FadeOutScene(1));
+        Death_scene* deathScene = new Death_scene(engine, save);
+        engine->transitionIntoScene(deathScene,new FadeOutScene(2));
+    }
+    if(player.getPosX() == 500 && player.getPosY() ==8){
+        save->setCoinsIslands(collectedCoins);
+        Victory_scene* victoryScene = new Victory_scene(engine,save);
+        engine->transitionIntoScene(victoryScene, new FadeOutScene(2));
+        engine->getTimer()->stop();
+
     }
 }
 

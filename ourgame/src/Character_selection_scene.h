@@ -8,6 +8,7 @@
 #include <libgba-sprite-engine/scene.h>
 #include <libgba-sprite-engine/sprites/sprite_builder.h>
 #include <libgba-sprite-engine/sprites/affine_sprite.h>
+#include "TempSave.h"
 
 
 class Character_selection_scene : public Scene {
@@ -28,8 +29,9 @@ private:
     int scene_timer = 0;
     int scrollX = 0;
     int timer = 0;
+    std::shared_ptr<TempSave> save;
 public:
-    Character_selection_scene(std::shared_ptr<GBAEngine> engine) : Scene(engine){}
+    Character_selection_scene(std::shared_ptr<GBAEngine> engine, std::shared_ptr<TempSave> tempSave) : Scene(engine){this->save = tempSave;}
     std::vector<Sprite *> sprites() override ;
     std::vector<Background *> backgrounds() override ;
 

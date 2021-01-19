@@ -7,7 +7,7 @@
 #include <libgba-sprite-engine/gba/tonc_memdef.h>
 #include <libgba-sprite-engine/gba_engine.h>
 #include <libgba-sprite-engine/effects/fade_out_scene.h>
-#include "backgrounds/level0_input.h"
+#include "backgrounds/character_selection_input.h"
 #include "sprites/lvl0_sprites.h"
 #include "sounds/choose_your_character.h"
 #include "Instruction_scene.h"
@@ -40,15 +40,15 @@ void Character_selection_scene::load(){
     TextStream::instance().setText(" CHARACTER!", 7, 9);
 
     foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(new ForegroundPaletteManager(sharedPal, sizeof(sharedPal)));
-    backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(level0_sharedPal, sizeof(level0_sharedPal)));
-    bg_1 = std::unique_ptr<Background>(new Background(1, level0_staticsTiles, sizeof(level0_staticsTiles),
-                                                     level0_statics_map, sizeof(level0_statics_map),
-                                                     19, 1, MAPLAYOUT_32X32));
-    bg_2 = std::unique_ptr<Background>(new Background(2, level0_cloudsTiles, sizeof(level0_cloudsTiles),
-                                                      level0_clouds_map, sizeof(level0_clouds_map),
+    backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(character_selection_sharedPal, sizeof(character_selection_sharedPal)));
+    bg_1 = std::unique_ptr<Background>(new Background(1, character_selection_staticsTiles, sizeof(character_selection_staticsTiles),
+                                                      character_selection_statics_map, sizeof(character_selection_statics_map),
+                                                      19, 1, MAPLAYOUT_32X32));
+    bg_2 = std::unique_ptr<Background>(new Background(2, character_selection_cloudsTiles, sizeof(character_selection_cloudsTiles),
+                                                      character_selection_clouds_map, sizeof(character_selection_clouds_map),
                                                       20, 2, MAPLAYOUT_32X32));
-    bg_3 = std::unique_ptr<Background>(new Background(3, level0_cloudsTiles, sizeof(level0_cloudsTiles),
-                                                      level0_clouds_map, sizeof(level0_clouds_map),
+    bg_3 = std::unique_ptr<Background>(new Background(3, character_selection_cloudsTiles, sizeof(character_selection_cloudsTiles),
+                                                      character_selection_clouds_map, sizeof(character_selection_clouds_map),
                                                       20, 2, MAPLAYOUT_32X32));
 
     arrowSprite = builder
@@ -111,10 +111,10 @@ void Character_selection_scene::tick(u16 keys) {
     if(arrowSprite->getX() != 160) dudeSprite->makeAnimated(0, 4, 6);
 
     if(keys & KEY_A){
-        if(arrowSprite->getX() == 64) skin_choice = 0; //pink guy
-        else if(arrowSprite->getX() == 112) skin_choice = 1; //owlet
-        else if(arrowSprite->getX() == 160) skin_choice = 2; //dude
-        Instruction_scene* instructionScene = new Instruction_scene(engine, skin_choice);
+        if(arrowSprite->getX() == 64) save->setSkin(0); //pink guy
+        else if(arrowSprite->getX() == 112) save->setSkin(1); //owlet
+        else if(arrowSprite->getX() == 160) save->setSkin(2); //dude
+        Instruction_scene* instructionScene = new Instruction_scene(engine, save);
         engine->transitionIntoScene(instructionScene,new FadeOutScene(2));
     }
 

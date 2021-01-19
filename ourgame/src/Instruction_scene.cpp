@@ -57,7 +57,7 @@ void Instruction_scene::tick(u16 keys){
     }
 
     if(keys & KEY_A){
-        Level1_scene* level1Scene = new Level1_scene(engine, skin_choice);
+        Level1_scene* level1Scene = new Level1_scene(engine, save);
         engine->transitionIntoScene(level1Scene,new FadeOutScene(2));
     }
 }

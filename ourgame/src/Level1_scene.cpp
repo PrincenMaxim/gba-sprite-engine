@@ -69,7 +69,9 @@ void Level1_scene::load(){
     //bg_3_filler->useMapScreenBlock(14);
 
     player.setBuilder(builder,startY, skin_choice);
+    engine->getTimer()->reset();
     engine->getTimer()->start();
+    save->resetCoins();
     bg_statics->scroll(0,0);
     bg_dynamics.get()->scroll(0,0);
 
@@ -118,7 +120,7 @@ void Level1_scene::tick(u16 keys) {
         TextStream::instance().setText("PRESS A", 3,17);
         if(keys & KEY_A){
 
-            Temple_scene* templeScene = new Temple_scene(engine, skin_choice);
+            Temple_scene* templeScene = new Temple_scene(engine, save);
             engine->setScene(templeScene);
             TextStream::instance().clear();
             bg_dynamics->scroll(0,0);
@@ -126,7 +128,7 @@ void Level1_scene::tick(u16 keys) {
     }
 
     if(player.fellOfMap(this->collisionMap_level1, nullptr, mapWidth)){
-        Death_scene* deathScene = new Death_scene(engine, skin_choice);
+        Death_scene* deathScene = new Death_scene(engine, save);
         engine->transitionIntoScene(deathScene,new FadeOutScene(2));
 
 

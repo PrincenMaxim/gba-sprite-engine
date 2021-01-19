@@ -47,8 +47,10 @@ void Temple_scene::scrollCoins(){
 
 void Temple_scene::removeCoins(){
     for(int i=0; i<coinSprites.size(); i++){
-        if(player.getSprite()[1]->collidesWith(*coinSprites[i].get())){
+        if(player.getSprite()[1]->collidesWith(*coinSprites[i].get()) || player.getSprite()[0]->collidesWith(*coinSprites[i].get())){
+
             coinY[i]=GBA_SCREEN_HEIGHT+16;
+            collectedCoins++;
             scrollCoins();
         }
 
@@ -186,12 +188,13 @@ void Temple_scene::tick(u16 keys) {
     removeCoins();
 
     if (player.calcTileX() == 62) {
-        FloatingIslands_scene *floatingIslandsScene = new FloatingIslands_scene(engine, skin_choice);
+        save->setCoinsTemple(collectedCoins);
+        FloatingIslands_scene *floatingIslandsScene = new FloatingIslands_scene(engine, save);
         engine->setScene(floatingIslandsScene);
     }
 
     if (player.fellOfMap(nullptr, this->collisionMap_temple, mapWidth)) {
-        Death_scene *deathScene = new Death_scene(engine, skin_choice);
+        Death_scene *deathScene = new Death_scene(engine, save);
 
         engine->transitionIntoScene(deathScene, new FadeOutScene(2));
 

@@ -5,6 +5,7 @@
 #include <libgba-sprite-engine/scene.h>
 #include <libgba-sprite-engine/sprites/sprite_builder.h>
 #include <libgba-sprite-engine/sprites/affine_sprite.h>
+#include "TempSave.h"
 
 #ifndef GBA_SPRITE_ENGINE_PROJECT_TITLE_SCENE_H
 #define GBA_SPRITE_ENGINE_PROJECT_TITLE_SCENE_H
@@ -19,8 +20,9 @@ private:
 
     int timer;
     int scrollX;
+    std::shared_ptr<TempSave> save;
 public:
-    Title_scene(std::shared_ptr<GBAEngine> engine) : Scene(engine){}
+    Title_scene(std::shared_ptr<GBAEngine> engine, std::shared_ptr<TempSave> tempSave) : Scene(engine){this->save=tempSave;}
     std::vector<Sprite *> sprites() override;
     std::vector<Background *>  backgrounds() override;
 

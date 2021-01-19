@@ -8,7 +8,7 @@
 #include <libgba-sprite-engine/effects/fade_out_scene.h>
 #include "Death_scene.h"
 #include "sprites/death_sprites.h"
-#include "backgrounds/level0_input.h"
+#include "backgrounds/character_selection_input.h"
 #include <libgba-sprite-engine/gba/tonc_types.h>
 #include "Level1_scene.h"
 #include "Title_scene.h"
@@ -34,9 +34,9 @@ void Death_scene::load(){
     TextStream::instance().setText("NO", 15,16);
 
     foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(new ForegroundPaletteManager(death_SharedPal, sizeof(death_SharedPal)));
-    backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(level0_sharedPal, sizeof(level0_sharedPal)));
-    bg_1 = std::unique_ptr<Background>(new Background(1, level0_cloudsTiles, sizeof(level0_cloudsTiles),
-                                                      level0_clouds_map, sizeof(level0_clouds_map),
+    backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(character_selection_sharedPal, sizeof(character_selection_sharedPal)));
+    bg_1 = std::unique_ptr<Background>(new Background(1, character_selection_cloudsTiles, sizeof(character_selection_cloudsTiles),
+                                                      character_selection_clouds_map, sizeof(character_selection_clouds_map),
                                                       20, 2, MAPLAYOUT_32X32));
     arrowSprite = builder
             .withData(death_arrow_spriteTiles, sizeof(death_arrow_spriteTiles))
@@ -56,8 +56,8 @@ void Death_scene::tick(u16 keys){
     timer += 1;
     if (timer % 30 == 0) {
         scrollX++;
-        bg_1.get()->scroll(scrollX, 0);
     }
+    bg_1.get()->scroll(scrollX, 0);
 
     if(keys & KEY_RIGHT && scene_timer == 0 && arrowSprite->getX() < 128){
         arrowSprite->moveTo(arrowSprite->getX()+44,arrowSprite->getY());
@@ -69,11 +69,11 @@ void Death_scene::tick(u16 keys){
     }
     if(keys & KEY_A){
         if(arrowSprite->getX() == 84) {
-            Level1_scene* level1Scene = new Level1_scene(engine, skin_choice);
+            Level1_scene* level1Scene = new Level1_scene(engine, save);
             engine->transitionIntoScene(level1Scene, new FadeOutScene(2));
         }
         else if(arrowSprite->getX() == 128){
-            Title_scene* titleScene = new Title_scene(engine);
+            Title_scene* titleScene = new Title_scene(engine, save);
             engine->transitionIntoScene(titleScene, new FadeOutScene(2));
         }
     }

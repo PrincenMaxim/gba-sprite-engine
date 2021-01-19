@@ -8,6 +8,7 @@
 #include <libgba-sprite-engine/scene.h>
 #include <libgba-sprite-engine/sprites/sprite_builder.h>
 #include <libgba-sprite-engine/sprites/affine_sprite.h>
+#include "TempSave.h"
 
 class Death_scene : public Scene{
 private:
@@ -22,8 +23,10 @@ private:
     int scrollX = 0;
     int scene_timer = 0;
     int skin_choice;
+    std::shared_ptr<TempSave> save;
 public:
-    Death_scene(std::shared_ptr<GBAEngine> engine, int skin) : Scene(engine){ this->skin_choice = skin;}
+    Death_scene(std::shared_ptr<GBAEngine> engine, std::shared_ptr<TempSave> tempSave) : Scene(engine){ this->save = tempSave;
+                                                                                                        this->skin_choice = save->getSkin();}
     std::vector<Sprite *> sprites() override;
     std::vector<Background *> backgrounds() override;
 

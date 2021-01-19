@@ -11,15 +11,21 @@
 #include "FloatingIslands_scene.h"
 #include "Temple_scene.h"
 #include "Instruction_scene.h"
+#include "TempSave.h"
+#include "Victory_scene.h"
 
 int skinselector;
 
 int main() {
     std::shared_ptr<GBAEngine> engine(new GBAEngine());
+    std::shared_ptr<TempSave> save(new TempSave());
 
-    Title_scene* titleScene = new Title_scene(engine);
+
+    Title_scene* titleScene = new Title_scene(engine,save);
     engine->setScene(titleScene);
 
+    //Victory_scene* victoryScene = new Victory_scene(engine,save);
+    //engine->setScene(victoryScene);
     //Instruction_scene* instructionScene = new Instruction_scene(engine, 2);
     //engine->setScene(instructionScene);
 

@@ -9,6 +9,7 @@
 #include <libgba-sprite-engine/sprites/sprite_builder.h>
 #include <libgba-sprite-engine/sprites/affine_sprite.h>
 #include "Player.h"
+#include "TempSave.h"
 
 class FloatingIslands_scene : public Scene {
 private:
@@ -35,6 +36,8 @@ private:
     int scrollStatics = 0;
     int coinX[5] = {100,198,316,372,400};
     int coinY[5] = {84,108,56,108,8};
+    std::shared_ptr<TempSave> save;
+    int collectedCoins = 0;
 
     int collisionMap_floatingIslands[20][64] =  {{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                                                  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1},
@@ -59,7 +62,8 @@ private:
 
 
 public:
-    FloatingIslands_scene(std::shared_ptr<GBAEngine>engine, int skin) : Scene(engine){ this->skin_choice = skin;}
+    FloatingIslands_scene(std::shared_ptr<GBAEngine>engine, std::shared_ptr<TempSave> tempSave) : Scene(engine){ this->save = tempSave;
+                                                                                                                 this->skin_choice = save->getSkin();}
 
     std::vector<Sprite *> sprites() override ;
     std::vector<Background *> backgrounds() override ;

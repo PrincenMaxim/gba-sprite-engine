@@ -10,7 +10,7 @@ add_executable(ourgame.elf
         src/backgrounds/level1_input.h
         src/Player.cpp src/Player.h
         src/sprites/pink_guy_sprites.h
-        src/backgrounds/level0_input.h
+        src/backgrounds/character_selection_input.h
         src/Character_selection_scene.cpp
         src/Character_selection_scene.h
         src/sprites/lvl0_sprites.h
@@ -32,7 +32,7 @@ add_executable(ourgame.elf
         src/backgrounds/floatingIslands_input.h
         src/Temple_scene.cpp src/Temple_scene.h
         src/backgrounds/temple_input.h
-        )
+        src/TempSave.cpp src/TempSave.h src/Victory_scene.cpp src/Victory_scene.h)
 
 
 target_link_libraries(${PROJECT_NAME}.elf gba-sprite-engine)

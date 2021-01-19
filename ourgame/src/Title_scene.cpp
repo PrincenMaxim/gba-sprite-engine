@@ -55,7 +55,7 @@ void Title_scene::tick(u16 keys){
     }
 
     if(keys & KEY_START){
-            Character_selection_scene *level0Scene = new Character_selection_scene(engine);
+            Character_selection_scene *level0Scene = new Character_selection_scene(engine, save);
             TextStream::instance().clear();
             engine->transitionIntoScene(level0Scene, new FadeOutScene(2));
     }
