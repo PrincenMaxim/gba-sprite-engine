@@ -81,12 +81,6 @@ int Player::calcTileY(){
     return round(posY/8);
 }
 
-void Player::calcJumpDirection(bool up, bool left, bool right) {
-    if(up && left) this->jumpDirection=1;
-    else if(up && right) this->jumpDirection=2;
-    else if(up) this->jumpDirection=0;
-}
-
 int Player::collision(bool up, bool down, bool left, bool right, int collision_map_32[20][32], int collision_map_64[20][64], int mapWidth) {
     if(calcTileX()>=0) {
         if (mapWidth == 256) {
@@ -415,5 +409,5 @@ bool Player::fellOfMap(int collision_map_32[20][32], int collision_map_64[20][64
             } else return 0;
         } else return 0;
     }
-    else return 0;  
+    else return 0;
 }
